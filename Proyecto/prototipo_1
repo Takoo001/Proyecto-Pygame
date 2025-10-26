@@ -1,0 +1,51 @@
+import pygame
+
+pygame.init()
+pantalla = pygame.display.set_mode((1920, 1080))
+pygame.display.set_caption("Juego Medieval")
+
+
+fondo = pygame.image.load("mapa.png")
+fondo = pygame.transform.scale(fondo, (1920, 1080))
+
+
+personaje_img = pygame.image.load("personaje.png")
+personaje_img = pygame.transform.scale(personaje_img, (50, 50))  
+
+
+class Personaje:
+    def __init__(self, x, y):
+        self.__x = x
+        self.__y = y
+        self.__vida = 100
+        self.sprite = personaje_img
+
+    def mover(self, teclas):
+        if teclas[pygame.K_UP]: self.__y -= 4
+        if teclas[pygame.K_DOWN]: self.__y += 4
+        if teclas[pygame.K_LEFT]: self.__x -= 4
+        if teclas[pygame.K_RIGHT]: self.__x += 4
+
+    def dibujar(self, pantalla):
+        pantalla.blit(self.sprite, (self.__x, self.__y))
+
+
+jugador = Personaje(375, 275)  
+
+
+reloj = pygame.time.Clock()
+ejecutando = True
+while ejecutando:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            ejecutando = False
+
+    teclas = pygame.key.get_pressed()
+    jugador.mover(teclas)
+
+    pantalla.blit(fondo, (0, 0))
+    jugador.dibujar(pantalla)
+    pygame.display.flip()
+    reloj.tick(60)
+
+pygame.quit()
