@@ -1,51 +1,247 @@
 import pygame
+import sys
 
 pygame.init()
 pantalla = pygame.display.set_mode((1920, 1080))
-pygame.display.set_caption("Juego Medieval")
+pygame.display.set_caption("Lautaro, El Quiebradioses")
+
+# Sistema de musica
+pygame.mixer.init()  
 
 
-fondo = pygame.image.load("mapa.png")
-fondo = pygame.transform.scale(fondo, (1920, 1080))
+pygame.mixer.music.load("musica_menu.ogg")
 
 
-personaje_img = pygame.image.load("personaje.png")
-personaje_img = pygame.transform.scale(personaje_img, (50, 50))  
+pygame.mixer.music.set_volume(1.0)
 
 
-class Personaje:
-    def __init__(self, x, y):
-        self.__x = x
-        self.__y = y
-        self.__vida = 100
-        self.sprite = personaje_img
+pygame.mixer.music.play(-1)
 
-    def mover(self, teclas):
-        if teclas[pygame.K_UP]: self.__y -= 4
-        if teclas[pygame.K_DOWN]: self.__y += 4
-        if teclas[pygame.K_LEFT]: self.__x -= 4
-        if teclas[pygame.K_RIGHT]: self.__x += 4
+
+
+
+fondo_menu = pygame.image.load("fondo_bosque.png")
+fondo_menu = pygame.transform.scale(fondo_menu, (1920, 1080))
+
+panel_menu = pygame.image.load("fondo_menu.png")     
+panel_opciones = pygame.image.load("fondo_menu.png")
+
+boton_base = pygame.image.load("boton_fondo.png")
+
+sprite_lautaro = pygame.image.load("pj.png")         
+sprite_lautaro = pygame.transform.scale(sprite_lautaro, (350, 350))
+
+
+brillo = 100     
+volumen = 100    
+
+
+# Clase boton
+
+class Boton:
+    def __init__(self, x, y, texto, funcion, fuente, color_texto=(255,255,255)):
+        self.x = x
+        self.y = y
+        self.funcion = funcion
+        self.texto = texto
+        self.fuente = fuente
+        self.color_texto = color_texto
+
+        self.img_base = pygame.transform.scale(boton_base, (350, 90))
+        self.img = self.img_base
+        self.rect = self.img.get_rect(center=(self.x, self.y))
+
+        self.hovered = False
+        self.tamano_normal = (350, 90)
+        self.tamano_zoom = (380, 100)
 
     def dibujar(self, pantalla):
-        pantalla.blit(self.sprite, (self.__x, self.__y))
+        mouse_pos = pygame.mouse.get_pos()
+
+        if self.rect.collidepoint(mouse_pos):
+            if not self.hovered:
+                self.img = pygame.transform.scale(self.img_base, self.tamano_zoom)
+                self.rect = self.img.get_rect(center=(self.x, self.y))
+                self.hovered = True
+        else:
+            if self.hovered:
+                self.img = pygame.transform.scale(self.img_base, self.tamano_normal)
+                self.rect = self.img.get_rect(center=(self.x, self.y))
+                self.hovered = False
+
+        pantalla.blit(self.img, self.rect)
+
+        texto_render = self.fuente.render(
+            self.texto,
+            True,
+            (255,165,0) if self.hovered else self.color_texto
+        )
+        texto_rect = texto_render.get_rect(center=self.rect.center)
+        pantalla.blit(texto_render, texto_rect)
+
+    def click(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.funcion()
 
 
-jugador = Personaje(375, 275)  
+# Sliders de opciones
+
+class Slider:
+    def __init__(self, x, y, valor):
+        self.x = x
+        self.y = y
+        self.valor = valor
+        self.ancho = 300
+        self.altura = 6
+        self.rect = pygame.Rect(x, y, self.ancho, self.altura)
+
+    def dibujar(self, pantalla):
+        pygame.draw.rect(pantalla, (200,200,200), self.rect)
+        per = self.valor / 100
+        pygame.draw.rect(pantalla, (255,140,0), (self.x, self.y, self.ancho * per, self.altura))
+
+        circulo_x = self.x + int(self.ancho * per)
+        pygame.draw.circle(pantalla, (255,255,255), (circulo_x, self.y + 3), 10)
+
+    def mover(self):
+        if pygame.mouse.get_pressed()[0]:
+            mx, my = pygame.mouse.get_pos()
+            if self.rect.collidepoint(mx, my) or abs(my - self.y) < 20:
+                nuevo = (mx - self.x) / self.ancho
+                nuevo = max(0, min(1, nuevo))
+                self.valor = int(nuevo * 100)
 
 
-reloj = pygame.time.Clock()
-ejecutando = True
-while ejecutando:
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            ejecutando = False
+# Funciones
 
-    teclas = pygame.key.get_pressed()
-    jugador.mover(teclas)
+def iniciar_juego():
+    global en_menu
+    en_menu = False
 
-    pantalla.blit(fondo, (0, 0))
-    jugador.dibujar(pantalla)
-    pygame.display.flip()
-    reloj.tick(60)
+def abrir_opciones():
+    opciones_menu()
 
-pygame.quit()
+def salir():
+    pygame.quit()
+    sys.exit()
+
+
+# Los botones principales
+
+fuente_botones = pygame.font.Font(None, 60)
+fuente_titulo = pygame.font.Font(None, 120)
+
+botones = [
+    Boton(400, 430, "JUGAR", iniciar_juego, fuente_botones),
+    Boton(400, 560, "OPCIONES", abrir_opciones, fuente_botones),
+    Boton(400, 690, "SALIR", salir, fuente_botones),
+]
+
+
+# El menu de opciones
+
+def opciones_menu():
+    global brillo, volumen
+
+    panel = pygame.transform.scale(panel_opciones, (800, 600))
+    rect_panel = panel.get_rect(center=(960, 540))
+
+    slider_brillo = Slider(900, 480, brillo)
+    slider_volumen = Slider(900, 570, volumen)
+
+    boton_volver = Boton(960, 700, "VOLVER", lambda: None, fuente_botones)
+
+    reloj = pygame.time.Clock()
+
+    while True:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                if evento.button == 1 and boton_volver.rect.collidepoint(pygame.mouse.get_pos()):
+                    brillo = slider_brillo.valor
+                    volumen = slider_volumen.valor
+
+                    pygame.mixer.music.set_volume(volumen / 100)
+
+                    return
+
+        slider_brillo.mover()
+        slider_volumen.mover()
+
+        # Volumen
+        pygame.mixer.music.set_volume(slider_volumen.valor / 100)
+
+        pantalla.blit(fondo_menu, (0, 0))
+        pantalla.blit(panel, rect_panel)
+
+        texto_b = fuente_botones.render("Brillo", True, (255,255,255))
+        pantalla.blit(texto_b, (620, 460))
+
+        texto_v = fuente_botones.render("Volumen", True, (255,255,255))
+        pantalla.blit(texto_v, (620, 550))
+
+        slider_brillo.dibujar(pantalla)
+        slider_volumen.dibujar(pantalla)
+
+        boton_volver.dibujar(pantalla)
+
+        # Brillo
+        oscuridad = 255 - int(slider_brillo.valor * 2.55)
+        if oscuridad > 0:
+            overlay = pygame.Surface((1920,1080))
+            overlay.set_alpha(oscuridad)
+            overlay.fill((0,0,0))
+            pantalla.blit(overlay, (0,0))
+
+        pygame.display.flip()
+        reloj.tick(60)
+
+
+# El menu princiopal
+
+def menu():
+
+    panel_escalado = pygame.transform.scale(panel_menu, (500, 450))
+    rect_panel = panel_escalado.get_rect(center=(410, 550))
+
+    reloj = pygame.time.Clock()
+
+    pygame.mixer.music.set_volume(volumen / 100)
+
+    while en_menu:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                for b in botones:
+                    b.click()
+
+        pantalla.blit(fondo_menu, (0, 0))
+
+        titulo = fuente_titulo.render("LAUTARO: EL QUIEBRADIOSES", True, (255,140,0))
+        pantalla.blit(titulo, titulo.get_rect(center=(960, 120)))
+
+        pantalla.blit(panel_escalado, rect_panel)
+
+        for b in botones:
+            b.dibujar(pantalla)
+
+        pantalla.blit(sprite_lautaro, sprite_lautaro.get_rect(center=(1500, 540)))
+
+        oscuridad = 255 - int(brillo * 2.55)
+        if oscuridad > 0:
+            overlay = pygame.Surface((1920,1080))
+            overlay.set_alpha(oscuridad)
+            overlay.fill((0,0,0))
+            pantalla.blit(overlay, (0,0))
+
+        pygame.display.flip()
+        reloj.tick(60)
+
+en_menu = True
+menu()
