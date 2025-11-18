@@ -2,42 +2,37 @@ import pygame
 import sys
 
 pygame.init()
-pantalla = pygame.display.set_mode((1920, 1080))
+pantalla_info = pygame.display.Info()
+ANCHO = pantalla_info.current_w
+ALTO = pantalla_info.current_h
+
+pantalla = pygame.display.set_mode((ANCHO, ALTO), pygame.FULLSCREEN)
+
 pygame.display.set_caption("Lautaro, El Quiebradioses")
 
 # Sistema de musica
 pygame.mixer.init()  
-
-
 pygame.mixer.music.load("musica_menu.ogg")
-
-
 pygame.mixer.music.set_volume(1.0)
-
-
 pygame.mixer.music.play(-1)
 
-
-
-
+# Fondos adaptados
 fondo_menu = pygame.image.load("fondo_bosque.png")
-fondo_menu = pygame.transform.scale(fondo_menu, (1920, 1080))
+fondo_menu = pygame.transform.scale(fondo_menu, (ANCHO, ALTO))
 
-panel_menu = pygame.image.load("fondo_menu.png")     
+panel_menu = pygame.image.load("fondo_menu.png")
 panel_opciones = pygame.image.load("fondo_menu.png")
 
 boton_base = pygame.image.load("boton_fondo.png")
 
-sprite_lautaro = pygame.image.load("pj.png")         
+sprite_lautaro = pygame.image.load("pj.png")
 sprite_lautaro = pygame.transform.scale(sprite_lautaro, (350, 350))
 
-
-brillo = 100     
-volumen = 100    
+brillo = 100
+volumen = 100
 
 
 # Clase boton
-
 class Boton:
     def __init__(self, x, y, texto, funcion, fuente, color_texto=(255,255,255)):
         self.x = x
@@ -85,7 +80,6 @@ class Boton:
 
 
 # Sliders de opciones
-
 class Slider:
     def __init__(self, x, y, valor):
         self.x = x
@@ -113,7 +107,6 @@ class Slider:
 
 
 # Funciones
-
 def iniciar_juego():
     global en_menu
     en_menu = False
@@ -126,30 +119,28 @@ def salir():
     sys.exit()
 
 
-# Los botones principales
-
+# Botones principales 
 fuente_botones = pygame.font.Font(None, 60)
 fuente_titulo = pygame.font.Font(None, 120)
 
 botones = [
-    Boton(400, 430, "JUGAR", iniciar_juego, fuente_botones),
-    Boton(400, 560, "OPCIONES", abrir_opciones, fuente_botones),
-    Boton(400, 690, "SALIR", salir, fuente_botones),
+    Boton(ANCHO * 0.20, ALTO * 0.40, "JUGAR", iniciar_juego, fuente_botones),
+    Boton(ANCHO * 0.20, ALTO * 0.52, "OPCIONES", abrir_opciones, fuente_botones),
+    Boton(ANCHO * 0.20, ALTO * 0.64, "SALIR", salir, fuente_botones),
 ]
 
 
-# El menu de opciones
-
+# Menu opciones
 def opciones_menu():
     global brillo, volumen
 
-    panel = pygame.transform.scale(panel_opciones, (800, 600))
-    rect_panel = panel.get_rect(center=(960, 540))
+    panel = pygame.transform.scale(panel_opciones, (int(ANCHO * 0.42), int(ALTO * 0.55)))
+    rect_panel = panel.get_rect(center=(ANCHO * 0.50, ALTO * 0.50))
 
-    slider_brillo = Slider(900, 480, brillo)
-    slider_volumen = Slider(900, 570, volumen)
+    slider_brillo = Slider(ANCHO * 0.47, ALTO * 0.44, brillo)
+    slider_volumen = Slider(ANCHO * 0.47, ALTO * 0.53, volumen)
 
-    boton_volver = Boton(960, 700, "VOLVER", lambda: None, fuente_botones)
+    boton_volver = Boton(ANCHO * 0.50, ALTO * 0.74, "VOLVER", lambda: None, fuente_botones)
 
     reloj = pygame.time.Clock()
 
@@ -163,35 +154,31 @@ def opciones_menu():
                 if evento.button == 1 and boton_volver.rect.collidepoint(pygame.mouse.get_pos()):
                     brillo = slider_brillo.valor
                     volumen = slider_volumen.valor
-
                     pygame.mixer.music.set_volume(volumen / 100)
-
                     return
 
         slider_brillo.mover()
         slider_volumen.mover()
 
-        # Volumen
         pygame.mixer.music.set_volume(slider_volumen.valor / 100)
 
         pantalla.blit(fondo_menu, (0, 0))
         pantalla.blit(panel, rect_panel)
 
         texto_b = fuente_botones.render("Brillo", True, (255,255,255))
-        pantalla.blit(texto_b, (620, 460))
+        pantalla.blit(texto_b, (ANCHO * 0.32, ALTO * 0.43))
 
         texto_v = fuente_botones.render("Volumen", True, (255,255,255))
-        pantalla.blit(texto_v, (620, 550))
+        pantalla.blit(texto_v, (ANCHO * 0.32, ALTO * 0.52))
 
         slider_brillo.dibujar(pantalla)
         slider_volumen.dibujar(pantalla)
-
         boton_volver.dibujar(pantalla)
 
-        # Brillo
+        # Overlay Brillo
         oscuridad = 255 - int(slider_brillo.valor * 2.55)
         if oscuridad > 0:
-            overlay = pygame.Surface((1920,1080))
+            overlay = pygame.Surface((ANCHO, ALTO))
             overlay.set_alpha(oscuridad)
             overlay.fill((0,0,0))
             pantalla.blit(overlay, (0,0))
@@ -200,12 +187,11 @@ def opciones_menu():
         reloj.tick(60)
 
 
-# El menu princiopal
-
+# Menu principal
 def menu():
 
     panel_escalado = pygame.transform.scale(panel_menu, (500, 450))
-    rect_panel = panel_escalado.get_rect(center=(410, 550))
+    rect_panel = panel_escalado.get_rect(center=(ANCHO * 0.21, ALTO * 0.51))
 
     reloj = pygame.time.Clock()
 
@@ -224,18 +210,18 @@ def menu():
         pantalla.blit(fondo_menu, (0, 0))
 
         titulo = fuente_titulo.render("LAUTARO: EL QUIEBRADIOSES", True, (255,140,0))
-        pantalla.blit(titulo, titulo.get_rect(center=(960, 120)))
+        pantalla.blit(titulo, titulo.get_rect(center=(ANCHO * 0.50, ALTO * 0.11)))
 
         pantalla.blit(panel_escalado, rect_panel)
 
         for b in botones:
             b.dibujar(pantalla)
 
-        pantalla.blit(sprite_lautaro, sprite_lautaro.get_rect(center=(1500, 540)))
+        pantalla.blit(sprite_lautaro, sprite_lautaro.get_rect(center=(ANCHO * 0.78, ALTO * 0.50)))
 
         oscuridad = 255 - int(brillo * 2.55)
         if oscuridad > 0:
-            overlay = pygame.Surface((1920,1080))
+            overlay = pygame.Surface((ANCHO, ALTO))
             overlay.set_alpha(oscuridad)
             overlay.fill((0,0,0))
             pantalla.blit(overlay, (0,0))
