@@ -7,7 +7,7 @@
 
 ---
 
-## 🎮 **Juegos en los que nos inspiramos**
+## **Juegos en los que nos inspiramos**
 Nuestro proyecto toma referencias directas de grandes títulos del género de acción:
 
 - **God of War** – Combate épico contra jefes, narrativa mítica y ambientación divina.  
