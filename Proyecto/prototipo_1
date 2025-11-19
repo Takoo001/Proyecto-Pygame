@@ -29,7 +29,7 @@ panel_opciones = pygame.image.load("fondo_menu.png")
 boton_base = pygame.image.load("boton_fondo.png")
 
 sprite_lautaro = pygame.image.load("pj.png")
-sprite_lautaro = pygame.transform.scale(sprite_lautaro, (350, 350))
+sprite_lautaro = pygame.transform.scale(sprite_lautaro, (920, 1100))
 
 brillo = 100
 volumen = 100
@@ -127,9 +127,9 @@ fuente_botones = pygame.font.Font(None, 60)
 fuente_titulo = pygame.font.Font(None, 120)
 
 botones = [
-    Boton(ANCHO * 0.20, ALTO * 0.40, "JUGAR", iniciar_juego, fuente_botones),
-    Boton(ANCHO * 0.20, ALTO * 0.52, "OPCIONES", abrir_opciones, fuente_botones),
-    Boton(ANCHO * 0.20, ALTO * 0.64, "SALIR", salir, fuente_botones),
+    Boton(ANCHO * 0.21, ALTO * 0.40, "JUGAR", iniciar_juego, fuente_botones),
+    Boton(ANCHO * 0.21, ALTO * 0.52, "OPCIONES", abrir_opciones, fuente_botones),
+    Boton(ANCHO * 0.21, ALTO * 0.64, "SALIR", salir, fuente_botones),
 ]
 
 
