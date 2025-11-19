@@ -1,4 +1,4 @@
-# 🎮 **Lautaro, El Quiebradioses**
+# **Lautaro, El Quiebradioses**
 
 ## **Integrantes del Proyecto**
 - *[Samir Ivan Arana Atiya]*
