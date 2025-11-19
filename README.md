@@ -1,13 +1,13 @@
 # **Lautaro, El Quiebradioses**
 
-## **Integrantes del Proyecto**
+## 👥 **Integrantes del Proyecto**
 - *[Samir Ivan Arana Atiya]*
 - *[Joaquín Ignacio Macías Panichine]*
 - *[Matias Andres Rain Marquez]*
 
 ---
 
-## **Juegos en los que nos inspiramos**
+## 💡 **Juegos en los que nos inspiramos**
 Nuestro proyecto toma referencias directas de grandes títulos del género de acción:
 
 - **God of War** – Combate épico contra jefes, narrativa mítica y ambientación divina.  
@@ -71,7 +71,7 @@ Esta versión debe presentar:
 
 ---
 
-## **Herramientas Utilizadas**
+## 🧰 **Herramientas Utilizadas**
 - **Figma** – Diseño de interfaz y prototipos visuales  
 - **Python** – Lenguaje principal del proyecto  
 - **Pygame** – Motor para la creación del juego 2D  
