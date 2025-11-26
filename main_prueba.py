@@ -9,10 +9,14 @@ background = (30, 30, 30)
 ventana = pg.display.set_mode((640, 480))
 pg.display.set_caption("Prueba")
 
-jugador = Jugador(100, 100)
+jugador = Jugador(0, 300)
+
+reloj = pg.time.Clock()
 
 running = True
 while running:
+
+    reloj.tick(60)
     for event in pg.event.get():
         if event.type == pg.QUIT: 
             running = False
