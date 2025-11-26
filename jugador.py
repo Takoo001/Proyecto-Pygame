@@ -12,27 +12,48 @@ class Jugador(pg.sprite.Sprite):
         self.x = x
         self.y = y
         self.rect = pg.Rect(0, 0, 32, 32)
-        self.rect.center = (x, y)
-        self.velocidad = 1
+        self.velocidad = 2
+        self.frame = 0  # Comienza con el primer frame
+        self.frames_caminando = []  # Lista para almacenar los frames de la animación
+        self.frame_tiempo = 0
+
+        for i in range(4):
+            frame = self.caminando.subsurface(i * 32, 0, 32, 32)
+            self.frames_caminando.append(frame)
+
+        self.imagen = self.quieto
 
     def dibujar(self, ventana):
-        pg.draw.rect(ventana, (0, 225, 0), self.rect)
+        ventana.blit(self.imagen, self.rect)
 
     def mover(self, teclas):
         mov_x = 0
         mov_y = 0
 
         if teclas[pg.K_a]:
-            mov_x = -1
+            mov_x = -0.5
         if teclas[pg.K_d]:
-            mov_x = 1
+            mov_x = 0.5
         if teclas[pg.K_w]:
-            mov_y = -1
+            mov_y = -0.5
         if teclas[pg.K_s]:
-            mov_y = 1
+            mov_y = 0.5
         
         self.rect.x += mov_x * self.velocidad
         self.rect.y += mov_y * self.velocidad
+
+        if mov_x != 0 or mov_y != 0:
+            self.animar_caminando()
+        else:
+            self.imagen = self.quieto
+
+    def animar_caminando(self):
+        self.frame_tiempo += 1
+        
+        if self.frame_tiempo >= 5:  
+            self.frame_tiempo = 0
+            self.frame = (self.frame + 1) % len(self.frames_caminando)
+            self.imagen = self.frames_caminando[self.frame]
 
     def restablecer_posicion(self, x, y):
         self.rect.x = x
