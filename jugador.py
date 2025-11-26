@@ -7,14 +7,15 @@ class Jugador(pg.sprite.Sprite):
             "Vida": 100,
             "Daño": 20
         }
+        self.flip = False
         self.quieto = pg.image.load("assets\images_lautaro\Lautaro_base.png").convert_alpha()
         self.caminando = pg.image.load("assets\images_lautaro\Lautaro_caminar.png").convert_alpha()
         self.x = x
         self.y = y
-        self.rect = pg.Rect(0, 0, 32, 32)
+        self.rect = pg.Rect(self.x, self.y, 32, 32)
         self.velocidad = 2
-        self.frame = 0  # Comienza con el primer frame
-        self.frames_caminando = []  # Lista para almacenar los frames de la animación
+        self.frame = 0
+        self.frames_caminando = []
         self.frame_tiempo = 0
 
         for i in range(4):
@@ -24,20 +25,23 @@ class Jugador(pg.sprite.Sprite):
         self.imagen = self.quieto
 
     def dibujar(self, ventana):
-        ventana.blit(self.imagen, self.rect)
+        imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
+        ventana.blit(imagen_flip, self.rect)
 
     def mover(self, teclas):
         mov_x = 0
         mov_y = 0
 
         if teclas[pg.K_a]:
-            mov_x = -0.5
+            mov_x = -1
+            self.flip = True
         if teclas[pg.K_d]:
-            mov_x = 0.5
+            mov_x = 1
+            self.flip = False
         if teclas[pg.K_w]:
-            mov_y = -0.5
+            mov_y = -1
         if teclas[pg.K_s]:
-            mov_y = 0.5
+            mov_y = 1
         
         self.rect.x += mov_x * self.velocidad
         self.rect.y += mov_y * self.velocidad
