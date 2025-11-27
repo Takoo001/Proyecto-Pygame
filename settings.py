@@ -18,7 +18,7 @@ VOLUMEN = 100
 
 # Rutas de assets
 RUTA_LOGO = "assets/images/logo_juego.png"
-RUTA_PJ_CAMINANDO = "assets/images/pj_caminando.png"
+RUTA_PJ_CAMINANDO = "assets/images_lautaro/Lautaro_base.png"
 RUTA_FONDO_MENU = "assets/images/fondo_bosque.png"
 RUTA_PANEL_MENU = "assets/images/fondo_menu.png"
 RUTA_BOTON = "assets/images/boton_fondo.png"
