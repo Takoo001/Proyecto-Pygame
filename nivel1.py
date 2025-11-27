@@ -3,9 +3,6 @@ import pygame as pg
 from jugador import Jugador
 
 class Nivel1:
-    def __init__(self):
-        pass
-    
     def iniciar(self):
         pg.init()
 
