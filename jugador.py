@@ -73,9 +73,9 @@ class Jugador(pg.sprite.Sprite):
             self.tiempo_de_inicio = tiempo_actual
 
     def restablecer_posicion(self, x, y):
-        self.rect.x = x
-        self.rect.y = y
-        self.hitbox.center = self.rect.center
+        self.hitbox.x = x
+        self.hitbox.y = y
+        self.rect.center = self.hitbox.center
 
     def obtener_posicion(self):
-        return (self.rect.x, self.rect.y)
+        return (self.hitbox.x, self.hitbox.y)
