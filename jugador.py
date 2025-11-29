@@ -28,7 +28,7 @@ class Jugador(pg.sprite.Sprite):
         self.frames_caminando = []
         self.frame_tiempo = 0
 
-        for i in range(13):
+        for i in range(12):
             frame = self.caminando.subsurface(i * 64, 0, 64, 64)
             self.frames_caminando.append(frame)
 
@@ -64,7 +64,7 @@ class Jugador(pg.sprite.Sprite):
     def animar_caminando(self):
         self.frame_tiempo += 1
         
-        if self.frame_tiempo >= 14:  
+        if self.frame_tiempo >= 13:  
             self.frame_tiempo = 0
             self.frame = (self.frame + 1) % len(self.frames_caminando)
             self.imagen = self.frames_caminando[self.frame]
