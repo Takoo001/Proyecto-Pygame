@@ -6,7 +6,7 @@ class Nivel1:
     def iniciar(self):
         pg.init()
 
-        background = (30, 30, 30)
+        background = (81, 209, 250)
 
         ventana = pg.display.set_mode((640, 480))
         pg.display.set_caption("Prueba")
