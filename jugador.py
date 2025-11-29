@@ -9,28 +9,31 @@ class Jugador(pg.sprite.Sprite):
             "Vida": 100,
             "Daño": 20
         }
-        self.velocidad = 2
+        self.velocidad = 4
 
         # Sprites
         self.flip = False
         self.quieto = pg.image.load("assets\images_lautaro\Lautaro_base64.png").convert_alpha()
-        self.caminando = pg.image.load("assets\images_lautaro\Lautaro_caminar.png").convert_alpha()
+        self.caminando = pg.image.load("assets\images_lautaro\Lautaro_base64_caminando.png").convert_alpha()
         self.imagen = self.quieto
         
         # Posición Hitbox
         self.x = x
         self.y = y
         self.rect = pg.Rect(self.x, self.y, 64, 64)
-        self.hitbox = pg.Rect(self.rect.x + 10, self.rect.y + 10, 30, 40)
+        self.hitbox = pg.Rect(self.rect.x + 10, self.rect.y + 10, 25, 38)
         
         # Frames de Sprites
         self.frame = 0
         self.frames_caminando = []
         self.frame_tiempo = 0
+        self.frame_milisegundos = 50
 
-        for i in range(4):
-            frame = self.caminando.subsurface(i * 32, 0, 32, 32)
+        for i in range(12):
+            frame = self.caminando.subsurface(i * 64, 0, 64, 64)
             self.frames_caminando.append(frame)
+
+        self.tiempo_de_inicio = pg.time.get_ticks() 
 
     def dibujar(self, ventana):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
@@ -62,12 +65,12 @@ class Jugador(pg.sprite.Sprite):
             self.imagen = self.quieto
 
     def animar_caminando(self):
-        self.frame_tiempo += 1
+        tiempo_actual = pg.time.get_ticks()
         
-        if self.frame_tiempo >= 5:  
-            self.frame_tiempo = 0
+        if tiempo_actual - self.tiempo_de_inicio > self.frame_milisegundos:  
             self.frame = (self.frame + 1) % len(self.frames_caminando)
             self.imagen = self.frames_caminando[self.frame]
+            self.tiempo_de_inicio = tiempo_actual
 
     def restablecer_posicion(self, x, y):
         self.rect.x = x
