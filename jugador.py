@@ -9,36 +9,38 @@ class Jugador(pg.sprite.Sprite):
             "Vida": 100,
             "Daño": 20
         }
-        self.velocidad = 4
+        self.velocidad = 5
+        self.velocidad_y = 0
+        gravedad = False
 
         # Sprites
         self.flip = False
-        self.quieto = pg.image.load("assets\images_lautaro\Lautaro_base64.png").convert_alpha()
-        self.caminando = pg.image.load("assets\images_lautaro\Lautaro_base64_caminando.png").convert_alpha()
+        self.quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
+        self.corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
         self.imagen = self.quieto
         
         # Posición Hitbox
         self.x = x
         self.y = y
         self.rect = pg.Rect(self.x, self.y, 64, 64)
-        self.hitbox = pg.Rect(self.rect.x + 10, self.rect.y + 10, 25, 38)
+        self.hitbox = pg.Rect(self.rect.x + 10, self.rect.y + 10, 25, 35)
         
         # Frames de Sprites
         self.frame = 0
-        self.frames_caminando = []
+        self.frames_corriendo = []
         self.frame_tiempo = 0
         self.frame_milisegundos = 50
 
         for i in range(12):
-            frame = self.caminando.subsurface(i * 64, 0, 64, 64)
-            self.frames_caminando.append(frame)
+            frame = self.corriendo.subsurface(i * 64, 0, 64, 64)
+            self.frames_corriendo.append(frame)
 
         self.tiempo_de_inicio = pg.time.get_ticks() 
 
     def dibujar(self, ventana):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
         ventana.blit(imagen_flip, self.rect.topleft)
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 2)
+        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
     def mover(self, teclas):
         mov_x = 0
@@ -68,14 +70,14 @@ class Jugador(pg.sprite.Sprite):
         tiempo_actual = pg.time.get_ticks()
         
         if tiempo_actual - self.tiempo_de_inicio > self.frame_milisegundos:  
-            self.frame = (self.frame + 1) % len(self.frames_caminando)
-            self.imagen = self.frames_caminando[self.frame]
+            self.frame = (self.frame + 1) % len(self.frames_corriendo)
+            self.imagen = self.frames_corriendo[self.frame]
             self.tiempo_de_inicio = tiempo_actual
 
     def restablecer_posicion(self, x, y):
         self.hitbox.x = x
         self.hitbox.y = y
-        self.rect.center = self.hitbox.center
+        self.hitbox.center = self.rect.center
 
     def obtener_posicion(self):
         return (self.hitbox.x, self.hitbox.y)
