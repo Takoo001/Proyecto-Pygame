@@ -26,16 +26,15 @@ sprite_lautaro = pygame.transform.scale(
 
 logo_juego = pygame.image.load(RUTA_LOGO).convert_alpha()
 
-# Música
+# Musica
 pygame.mixer.init()
 pygame.mixer.music.load(RUTA_MUSICA_MENU)
 pygame.mixer.music.set_volume(VOLUMEN / 100)
 pygame.mixer.music.play(-1)
 
 
-# --------------------------------------------------------
+
 # BOTONES
-# --------------------------------------------------------
 class Boton:
     def __init__(self, x, y, texto, funcion, fuente, color_texto=(255, 255, 255)):
         self.x = x
@@ -45,13 +44,13 @@ class Boton:
         self.fuente = fuente
         self.color_texto = color_texto
 
-        self.img_base = pygame.transform.scale(boton_base, (350, 90))
+        self.img_base = pygame.transform.scale(boton_base, (225, 60))
         self.img = self.img_base
         self.rect = self.img.get_rect(center=(self.x, self.y))
 
         self.hovered = False
-        self.tamano_normal = (350, 90)
-        self.tamano_zoom = (380, 100)
+        self.tamano_normal = (250, 70)
+        self.tamano_zoom = (270, 80)
 
     def dibujar(self, pantalla):
         mouse_pos = pygame.mouse.get_pos()
@@ -82,9 +81,8 @@ class Boton:
             self.funcion()
 
 
-# --------------------------------------------------------
-# SLIDER
-# --------------------------------------------------------
+
+# Slider
 class Slider:
     def __init__(self, x, y, valor):
         self.x = x
@@ -110,9 +108,7 @@ class Slider:
                 self.valor = int(nuevo * 100)
 
 
-# --------------------------------------------------------
-# FUNCIONES DEL MENÚ
-# --------------------------------------------------------
+# Funciones del menu
 def iniciar_juego():
     global en_menu
     en_menu = False
@@ -127,18 +123,17 @@ def salir():
     sys.exit()
 
 
-fuente_botones = pygame.font.Font(None, 60)
+fuente_botones = pygame.font.Font(None, 35)
 
 botones = [
-    Boton(ANCHO * 0.21, ALTO * 0.40, "JUGAR", iniciar_juego, fuente_botones),
-    Boton(ANCHO * 0.21, ALTO * 0.52, "OPCIONES", abrir_opciones, fuente_botones),
-    Boton(ANCHO * 0.21, ALTO * 0.64, "SALIR", salir, fuente_botones),
+    Boton(ANCHO * 0.15, ALTO * 0.40, "JUGAR", iniciar_juego, fuente_botones),
+    Boton(ANCHO * 0.15, ALTO * 0.48, "OPCIONES", abrir_opciones, fuente_botones),
+    Boton(ANCHO * 0.15, ALTO * 0.56, "SALIR", salir, fuente_botones),
 ]
 
 
-# --------------------------------------------------------
-# MENÚ DE OPCIONES
-# --------------------------------------------------------
+
+# Menu de opciones
 def opciones_menu():
     global BRILLO, VOLUMEN
 
@@ -162,24 +157,30 @@ def opciones_menu():
                 if boton_volver.rect.collidepoint(pygame.mouse.get_pos()):
                     BRILLO = slider_brillo.valor
                     VOLUMEN = slider_volumen.valor
-                    pygame.mixer.music.set_volume(VOLUMEN / 100)
                     return
 
+        # mover sliders
         slider_brillo.mover()
         slider_volumen.mover()
 
-        PANTALLA.blit(fondo_menu, (0, 0))
+
+        pygame.mixer.music.set_volume(slider_volumen.valor / 100)
+
+        PANTALLA.blit(fondo_menu, (0,0))
         PANTALLA.blit(panel, rect_panel)
 
         texto_b = fuente_botones.render("Brillo", True, (255, 255, 255))
         PANTALLA.blit(texto_b, (ANCHO * 0.32, ALTO * 0.43))
 
+
         texto_v = fuente_botones.render("Volumen", True, (255, 255, 255))
         PANTALLA.blit(texto_v, (ANCHO * 0.32, ALTO * 0.52))
+
 
         slider_brillo.dibujar(PANTALLA)
         slider_volumen.dibujar(PANTALLA)
         boton_volver.dibujar(PANTALLA)
+
 
         oscuridad = 255 - int(slider_brillo.valor * 2.55)
         if oscuridad > 0:
@@ -192,14 +193,13 @@ def opciones_menu():
         reloj.tick(60)
 
 
-# --------------------------------------------------------
-# MENÚ PRINCIPAL
-# --------------------------------------------------------
+
+# Menu principal
 def menu():
     global en_menu, BRILLO
 
-    panel_escalado = pygame.transform.scale(panel_menu, (500, 450))
-    rect_panel = panel_escalado.get_rect(center=(ANCHO * 0.21, ALTO * 0.51))
+    panel_escalado = pygame.transform.scale(panel_menu, (350, 320))
+    rect_panel = panel_escalado.get_rect(center=(ANCHO * 0.15, ALTO * 0.48))
 
     reloj = pygame.time.Clock()
 
@@ -213,7 +213,7 @@ def menu():
                 for b in botones:
                     b.click()
 
-        PANTALLA.blit(fondo_menu, (0, 0))
+        PANTALLA.blit(fondo_menu, (0,0))
 
         rect_logo = logo_juego.get_rect(center=(ANCHO // 2, int(ALTO * 0.13)))
         PANTALLA.blit(logo_juego, rect_logo)
@@ -223,7 +223,7 @@ def menu():
         for b in botones:
             b.dibujar(PANTALLA)
 
-        PANTALLA.blit(sprite_lautaro, sprite_lautaro.get_rect(center=(ANCHO * 0.78, ALTO * 0.50)))
+        PANTALLA.blit(sprite_lautaro, sprite_lautaro.get_rect(center=(ANCHO * 0.76, ALTO * 0.50)))
 
         oscuridad = 255 - int(BRILLO * 2.55)
         if oscuridad > 0:
