@@ -31,7 +31,7 @@ class Nivel1:
             
             teclas = pg.key.get_pressed()
 
-            jugador.movimiento(teclas, 0, 0)
+            jugador.movimiento(teclas)
             jugador.dibujar(ventana)
             
             suelo.dibujar_suelo(suelo, ventana)

@@ -44,7 +44,7 @@ class Jugador(pg.sprite.Sprite):
         ventana.blit(imagen_flip, self.rect.topleft)
         pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
-    def movimiento(self, teclas, pantalla_x, pantalla_y):
+    def movimiento(self, teclas):
         # Movimiento Jugador
         mov_x = 0
         mov_y = 0
@@ -69,11 +69,6 @@ class Jugador(pg.sprite.Sprite):
             self.animar_caminando()
         else:
             self.imagen = self.quieto
-        
-        if self.hitbox.right > (ns.ANCHO_NIVEL - ns.LIMITE_PANTALLA):
-            self.pantalla_x = (ns.ANCHO_NIVEL - ns.LIMITE_PANTALLA) - self.hitbox.right
-        if self.hitbox.left < ns.LIMITE_PANTALLA:
-            self.pantalla_y = ns.LIMITE_PANTALLA - self.hitbox.left
     
     def animar_caminando(self):
         tiempo_actual = pg.time.get_ticks()
