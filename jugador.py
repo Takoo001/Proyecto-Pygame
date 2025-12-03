@@ -42,7 +42,7 @@ class Jugador(pg.sprite.Sprite):
     def dibujar(self, ventana):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
         ventana.blit(imagen_flip, self.rect.topleft)
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
+        #pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
     def movimiento(self, teclas):
         # Movimiento Jugador
@@ -57,8 +57,6 @@ class Jugador(pg.sprite.Sprite):
             self.flip = False
         if teclas[pg.K_w]:
             mov_y = -1
-        if teclas[pg.K_s]:
-            mov_y = 1
         
         self.rect.x += mov_x * self.velocidad
         self.rect.y += mov_y * self.velocidad
@@ -81,6 +79,7 @@ class Jugador(pg.sprite.Sprite):
     def obtener_posicion(self):
         return (self.hitbox.x, self.hitbox.y)
     
-    def restablecer_posicion(self, x, y):
-        self.hitbox.x = x
-        self.hitbox.y = y
+    def restablecer_posicion(self, y):
+        self.rect.y = y
+        self.hitbox.center = self.rect.center
+        self.velocidad_y = 0
