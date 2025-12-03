@@ -12,8 +12,8 @@ class Nivel1:
         pg.display.set_caption("Nivel1")
 
         # Estableciendo posición de inicio 
-        jugador = Jugador(0, ns.ALTO_NIVEL -64 - 64)
-        suelo = Suelo(0, ns.ALTO_NIVEL - 64)
+        jugador = Jugador(0, ns.ALTO_NIVEL -64 - 49)
+        suelo = Suelo()
 
         # Reloj para fps
         reloj = pg.time.Clock()
@@ -31,16 +31,17 @@ class Nivel1:
             
             teclas = pg.key.get_pressed()
 
-            # Posiciones/Colisiones
             posicion_jugador = jugador.obtener_posicion()
 
-            if jugador.hitbox.colliderect(suelo.rect):
-                jugador.restablecer_posicion(*posicion_jugador)
-
-            jugador.mover(teclas)
+            jugador.movimiento(teclas)
             jugador.dibujar(ventana)
             
-            suelo.dibujar_suelo(suelo, ventana)
+            print(posicion_jugador)
+            for i in suelo.lista_suelos:
+                if jugador.hitbox.colliderect(i):
+                    jugador.restablecer_posicion((ns.ALTO_NIVEL -64 - 49))
+
+            suelo.dibujar_suelo(ventana)
 
             pg.display.update()
 

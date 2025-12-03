@@ -1,4 +1,5 @@
 import pygame as pg
+import nivel_settings as ns
 
 class Jugador(pg.sprite.Sprite):
     def __init__(self, x, y):
@@ -11,7 +12,8 @@ class Jugador(pg.sprite.Sprite):
         }
         self.velocidad = 5
         self.velocidad_y = 0
-        gravedad = False
+        self.gravedad = 1
+        self.contacto_suelo = False
 
         # Sprites
         self.flip = False
@@ -23,7 +25,7 @@ class Jugador(pg.sprite.Sprite):
         self.x = x
         self.y = y
         self.rect = pg.Rect(self.x, self.y, 64, 64)
-        self.hitbox = pg.Rect(self.rect.x + 10, self.rect.y + 10, 25, 35)
+        self.hitbox = pg.Rect(self.x + 10, self.y + 10, 25, 35)
         
         # Frames de Sprites
         self.frame = 0
@@ -40,9 +42,10 @@ class Jugador(pg.sprite.Sprite):
     def dibujar(self, ventana):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
         ventana.blit(imagen_flip, self.rect.topleft)
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
+        #pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
-    def mover(self, teclas):
+    def movimiento(self, teclas):
+        # Movimiento Jugador
         mov_x = 0
         mov_y = 0
 
@@ -54,18 +57,17 @@ class Jugador(pg.sprite.Sprite):
             self.flip = False
         if teclas[pg.K_w]:
             mov_y = -1
-        if teclas[pg.K_s]:
-            mov_y = 1
         
         self.rect.x += mov_x * self.velocidad
         self.rect.y += mov_y * self.velocidad
         self.hitbox.center = self.rect.center
 
+        # Cambiar sprite del Jugador en caso de movimiento o no
         if mov_x != 0 or mov_y != 0:
             self.animar_caminando()
         else:
             self.imagen = self.quieto
-
+    
     def animar_caminando(self):
         tiempo_actual = pg.time.get_ticks()
         
@@ -74,10 +76,10 @@ class Jugador(pg.sprite.Sprite):
             self.imagen = self.frames_corriendo[self.frame]
             self.tiempo_de_inicio = tiempo_actual
 
-    def restablecer_posicion(self, x, y):
-        self.hitbox.x = x
-        self.hitbox.y = y
-        self.hitbox.center = self.rect.center
-
     def obtener_posicion(self):
         return (self.hitbox.x, self.hitbox.y)
+    
+    def restablecer_posicion(self, y):
+        self.rect.y = y
+        self.hitbox.center = self.rect.center
+        self.velocidad_y = 0
