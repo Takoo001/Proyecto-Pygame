@@ -14,66 +14,111 @@ class Jugador(pg.sprite.Sprite):
         self.velocidad_y = 0
         self.gravedad = 1
         self.contacto_suelo = False
+        self.atacando = False
+        self.atacando_timer = 0
+        self.direccion = "DERECHA"
 
         # Sprites
         self.flip = False
         self.quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
         self.corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
         self.imagen = self.quieto
+        self.sprite_ataque = pg.image.load("assets\sprites_lautaro\ataque.png").convert_alpha()
         
         # Posición Hitbox
         self.x = x
         self.y = y
         self.rect = pg.Rect(self.x, self.y, 64, 64)
-        self.hitbox = pg.Rect(self.x + 10, self.y + 10, 25, 35)
-        
-        # Frames de Sprites
-        self.frame = 0
+        self.hitbox = pg.Rect(self.x, self.y, 25, 35)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx, self.rect.centery - 48, 64, 64)
+
+        # Frames de Sprites caminando
+        self.frame_corriendo = 0
         self.frames_corriendo = []
-        self.frame_tiempo = 0
+        self.frame_tiempo_corriendo = 0
         self.frame_milisegundos = 50
+
+        # Frames de Sprite atacando
+        self.frame_ataque = 0
+        self.frames_ataque = []
+        self.frame_tiempo_ataque = 0
+        self.frame_milisegundos_ataque = 50
 
         for i in range(12):
             frame = self.corriendo.subsurface(i * 64, 0, 64, 64)
             self.frames_corriendo.append(frame)
 
-        self.tiempo_de_inicio = pg.time.get_ticks() 
+        for i in range(4):
+            frame = self.sprite_ataque.subsurface(i * 64, 0, 64, 64)
+            self.frames_ataque.append(frame)
 
     def dibujar(self, ventana):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
+        ataque = pg.transform.flip(self.sprite_ataque, flip_x= self.flip, flip_y= False)
         ventana.blit(imagen_flip, self.rect.topleft)
         #pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
-    def movimiento(self, teclas):
+    def movimiento(self, teclas, ventana):
         # Movimiento Jugador
         mov_x = 0
         mov_y = 0
 
         if teclas[pg.K_a]:
             mov_x = -1
+            self.direccion = "IZQUIERDA"
             self.flip = True
+
         if teclas[pg.K_d]:
             mov_x = 1
+            self.direccion = "DERECHA"
             self.flip = False
+
         if teclas[pg.K_w]:
             mov_y = -1
+        if teclas[pg.K_s]:
+            mov_y = 1
+
+        # Ataque
+        if teclas[pg.K_SPACE]:
+            self.atacando = True
+            self.atacando_timer += 1
+            self.atacar(ventana)
+            if self.atacando_timer >= 2:
+                self.atacando = False
         
         self.rect.x += mov_x * self.velocidad
         self.rect.y += mov_y * self.velocidad
         self.hitbox.center = self.rect.center
 
         # Cambiar sprite del Jugador en caso de movimiento o no
-        if mov_x != 0 or mov_y != 0:
-            self.animar_caminando()
+        if mov_x != 0:
+            self.animar_corriendo()
         else:
             self.imagen = self.quieto
     
-    def animar_caminando(self):
+    def atacar(self, ventana):
+        if self.direccion == "DERECHA":
+            ataque_hitbox = pg.Rect(self.rect.centerx, self.rect.centery - 48, 64, 64)
+        if self.direccion == "IZQUIERDA":
+            ataque_hitbox = pg.Rect(self.rect.centerx - 64, self.rect.centery - 48, 64, 64)
+        
+        pg.draw.rect(ventana, (255, 0, 0), ataque_hitbox, 2)
+        return ataque_hitbox
+
+    def animar_corriendo(self):
         tiempo_actual = pg.time.get_ticks()
         
         if tiempo_actual - self.tiempo_de_inicio > self.frame_milisegundos:  
-            self.frame = (self.frame + 1) % len(self.frames_corriendo)
-            self.imagen = self.frames_corriendo[self.frame]
+            self.frame_corriendo = (self.frame_corriendo + 1) % len(self.frames_corriendo)
+            self.imagen = self.frames_corriendo[self.frame_corriendo]
+            self.tiempo_de_inicio = tiempo_actual
+
+    def animar_ataque(self):
+        tiempo_actual = pg.time.get_ticks()
+
+        if tiempo_actual - self.tiempo_de_inicio > self.frame_milisegundos:  
+            self.frame_caminando = (self.frame_caminando + 1) % len(self.frames_corriendo)
+            self.imagen = self.frames_corriendo[self.frame_caminando]
             self.tiempo_de_inicio = tiempo_actual
 
     def obtener_posicion(self):
