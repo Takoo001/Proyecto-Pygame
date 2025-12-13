@@ -9,7 +9,7 @@ class Nivel1:
     def iniciar(self):
         pg.init()
 
-        ventana = pg.display.set_mode((ns.ANCHO_NIVEL, ns.ALTO_NIVEL))
+        ventana = pg.display.set_mode((ns.ANCHO_NIVEL, ns.ALTO_NIVEL), pg.RESIZABLE)
         pg.display.set_caption("Nivel1")
 
         fondo = pg.Surface((1600, 1200))
@@ -22,6 +22,9 @@ class Nivel1:
 
         # Reloj para fps
         reloj = pg.time.Clock()
+
+        ESCALA_X = 1
+        ESCALA_Y = 1
 
         def mover_camara(camara, jugador):
             camara.center = jugador
@@ -36,14 +39,28 @@ class Nivel1:
             for event in pg.event.get():
                 if event.type == pg.QUIT: 
                     running = False
+            
+            if event.type == pg.VIDEORESIZE:
+                ns.ANCHO_NIVEL, ns.ALTO_NIVEL = event.size
+                ventana = pg.display.set_mode((ns.ANCHO_NIVEL, ns.ALTO_NIVEL), pg.RESIZABLE)
+                ESCALA_X = ns.ANCHO_NIVEL / 640
+                ESCALA_Y = ns.ALTO_NIVEL / 480
 
             ventana.fill(ns.BACKGROUND)
             
+            jugador.rect.x = jugador.rect.x * ESCALA_X
+            jugador.rect.y = jugador.rect.y * ESCALA_Y
+            jugador.rect.width = int(jugador.rect.width * ESCALA_X)
+            jugador.rect.height = int(jugador.rect.height * ESCALA_Y)
+
+            jugador.hitbox.x = jugador.hitbox.x * ESCALA_X
+            jugador.hitbox.y = jugador.hitbox.y * ESCALA_Y
+            jugador.hitbox.width = int(jugador.hitbox.width * ESCALA_X)
+            jugador.hitbox.height = int(jugador.hitbox.height * ESCALA_Y)
+
             teclas = pg.key.get_pressed()
 
-            posicion_jugador = jugador.obtener_posicion()
-
-            jugador.movimiento(teclas, ventana)
+            jugador.movimiento(teclas)
             jugador.dibujar(ventana)
 
             print(jugador.hitbox.center)
