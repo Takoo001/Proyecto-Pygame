@@ -20,7 +20,6 @@ class Jugador(pg.sprite.Sprite):
 
         # Parametros para Ataque
         self.atacando = False
-        self.atacando_timer = 0
         self.direccion = "DERECHA"
 
         # Lógica de cooldown de ataque
@@ -30,11 +29,16 @@ class Jugador(pg.sprite.Sprite):
         # Sprites
         self.flip = False
         self.quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
-        self.corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
+        self.sprite_corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
         self.imagen = self.quieto
         self.sprite_ataque = pg.image.load("assets\\sprites_lautaro\\ataque_prueba.png").convert_alpha()
         self.imagen_ataque = None
         self.girando = pg.image.load("assets\sprites_lautaro\giro_aire.png").convert_alpha()
+
+        # Recorte sprites por sus frames
+        self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 12, 64, 64)
+        self.frames_ataque = self.recortar_frames(self.sprite_ataque, 7, 64, 64)
+        self.frames_girando = self.recortar_frames(self.girando, 4, 64, 64)
 
         # Posición Hitbox
         self.x = x
@@ -45,45 +49,35 @@ class Jugador(pg.sprite.Sprite):
 
         # Frames de Sprites Corriendo
         self.frame_corriendo = 0
-        self.frames_corriendo = []
         self.frame_tiempo_corriendo = 0
         self.frame_milisegundos = 100
 
         # Frames de Sprite Atacando
         self.frame_ataque = 0
-        self.frames_ataque = []
+
         self.frame_tiempo_ataque = 0
         self.frame_milisegundos_ataque = 10
         self.tiempo_de_inicio_ataque = pg.time.get_ticks()
 
         # Frames de Sprites Girando
         self.frame_girando = 0
-        self.frames_girando = []
+
         self.frame_tiempo_girando = 0
         self.frame_milisegundos_girando = 50
 
         self.tiempo_de_inicio = pg.time.get_ticks()
         
-
-        # Bucle para recortar el sprite por el total de frames:
-
-        # Personaje Corriendo
-        for sprite in range(12):
-            frame = self.corriendo.subsurface(sprite * 64, 0, 64, 64)
-            self.frames_corriendo.append(frame)
-
-        # Ataque
-        for sprite in range(7):
-            frame = self.sprite_ataque.subsurface(sprite * 64, 0, 64, 64)
-            self.frames_ataque.append(frame)
-
         if len(self.frames_ataque) > 0:
             self.imagen_ataque = self.frames_ataque[0]
 
-        # Giro en el Aire
-        for sprite in range(4):
-            frame = self.girando.subsurface(sprite * 64, 0, 64, 64)
-            self.frames_girando.append(frame)
+    # Bucle para recortar el sprite por el total de frames:
+    def recortar_frames(self, sprite, numero_frames, ancho, alto):
+        frames = []
+        # Personaje Corriendo
+        for i in range(numero_frames):
+            frame = sprite.subsurface(i * ancho, 0, ancho, alto)
+            frames.append(frame)
+        return frames
 
     def movimiento(self, teclas):
         # Movimiento Jugador
