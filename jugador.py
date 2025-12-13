@@ -5,13 +5,18 @@ class Jugador(pg.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
 
-        # Estadisticas/ajustes
+        # Estadisticas
         self.estadisticas = {
             "Vida": 100,
             "Daño": 20
         }
+
+        # Parametros para velocidad y gravedad
         self.velocidad = 5
         self.velocidad_y = 0
+        self.gravedad = 0.5
+        self.velocidad_salto = -12
+        self.en_el_aire = False
 
         # Parametros para Ataque
         self.atacando = False
@@ -93,24 +98,29 @@ class Jugador(pg.sprite.Sprite):
             self.direccion = "DERECHA"
             self.flip = False
 
-        if teclas[pg.K_w]:
-            mov_y = -1
-        if teclas[pg.K_s]:
-            mov_y = 1
+        if teclas[pg.K_w] and not self.en_el_aire:
+            self.velocidad_y = self.velocidad_salto
+            self.en_el_aire = True
+
+        if self.en_el_aire:
+            self.velocidad_y += self.gravedad
         
+        mov_y = self.velocidad_y
+
         tiempo_actual = pg.time.get_ticks()
 
         # Ataque
         if teclas[pg.K_SPACE] and tiempo_actual - self.ultimo_ataque > self.cooldown:
-            if not self.atacando:
-                self.atacando = True
-                self.ultimo_ataque = tiempo_actual
-                self.tiempo_de_inicio_ataque = tiempo_actual
-                self.animar_ataque()
+            if not self.en_el_aire:
+                if not self.atacando:
+                    self.atacando = True
+                    self.ultimo_ataque = tiempo_actual
+                    self.tiempo_de_inicio_ataque = tiempo_actual
+                    self.animar_ataque()
 
         # Movimiento
         self.rect.x += mov_x * self.velocidad
-        self.rect.y += mov_y * self.velocidad
+        self.rect.y += mov_y
         self.hitbox.center = self.rect.center
 
         # Cambiar sprite del Jugador en caso de movimiento o no
@@ -156,3 +166,4 @@ class Jugador(pg.sprite.Sprite):
         self.rect.y = y
         self.hitbox.center = self.rect.center
         self.velocidad_y = 0
+        self.en_el_aire = False
