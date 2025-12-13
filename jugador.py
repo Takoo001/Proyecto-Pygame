@@ -21,7 +21,6 @@ class Jugador(pg.sprite.Sprite):
         # Lógica de cooldown de ataque
         self.cooldown = 1000
         self.ultimo_ataque = 0
-        self.duracion_ataque = 2000
 
         # Sprites
         self.flip = False
@@ -104,10 +103,6 @@ class Jugador(pg.sprite.Sprite):
                 self.ultimo_ataque = tiempo_actual
                 self.tiempo_de_inicio_ataque = tiempo_actual
                 self.animar_ataque()
-
-        if self.atacando and tiempo_actual - self.tiempo_de_inicio_ataque > self.duracion_ataque:
-            self.atacando = False
-            self.frame_ataque = 0 
 
         # Movimiento
         self.rect.x += mov_x * self.velocidad
