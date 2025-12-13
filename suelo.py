@@ -8,7 +8,7 @@ class Suelo(pg.sprite.Sprite):
         self.sprite_suelo = pg.image.load("assets\sprites_suelo\suelo_cesped.png")
         self.lista_suelos = []
 
-        for x in range(0, ns.ANCHO_NIVEL, 64):
+        for x in range(0, ns.ANCHO_NIVEL * 2, 64):
             self.lista_suelos.append(pg.Rect(x, ns.ALTO_NIVEL - 64, 64, 64))
 
     def dibujar_suelo(self, ventana):
