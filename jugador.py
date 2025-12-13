@@ -35,7 +35,7 @@ class Jugador(pg.sprite.Sprite):
         self.y = y
         self.rect = pg.Rect(self.x, self.y, 64, 64)
         self.hitbox = pg.Rect(self.x, self.y, 25, 35)
-        self.ataque_hitbox = pg.Rect(self.rect.centerx, self.rect.centery - 48, 64, 64)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
 
         # Frames de Sprites caminando
         self.frame_corriendo = 0
@@ -47,17 +47,21 @@ class Jugador(pg.sprite.Sprite):
         self.frame_ataque = 0
         self.frames_ataque = []
         self.frame_tiempo_ataque = 0
-        self.frame_milisegundos_ataque = 125
+        self.frame_milisegundos_ataque = 10
         self.tiempo_de_inicio_ataque = pg.time.get_ticks()
 
         self.tiempo_de_inicio = pg.time.get_ticks()
         
 
+        # Bucle para recortar el sprite por el total de frames:
+
+        # Personaje Corriendo
         for i in range(12):
             frame = self.corriendo.subsurface(i * 64, 0, 64, 64)
             self.frames_corriendo.append(frame)
 
-        for a in range(4):
+        # Ataque
+        for a in range(7):
             frame = self.sprite_ataque.subsurface(a * 64, 0, 64, 64)
             self.frames_ataque.append(frame)
 
@@ -116,9 +120,9 @@ class Jugador(pg.sprite.Sprite):
             self.imagen = self.quieto
 
         if self.direccion == "DERECHA":
-            self.ataque_hitbox = pg.Rect(self.rect.centerx, self.rect.centery - 48, 64, 64)
+            self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
         if self.direccion == "IZQUIERDA":
-            self.ataque_hitbox = pg.Rect(self.rect.centerx - 64, self.rect.centery - 48, 64, 64)
+            self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 48, 64, 64)
 
         if self.atacando:
             self.animar_ataque()
