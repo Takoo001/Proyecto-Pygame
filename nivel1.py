@@ -2,7 +2,7 @@ import pygame as pg
 import nivel_settings as ns
 
 from jugador import Jugador
-from enemigo import Enemigo
+from enemigo import EnemigoPequeno
 from suelo import Suelo
 
 class Nivel1:
@@ -18,7 +18,7 @@ class Nivel1:
 
         # Estableciendo posición de inicio 
         jugador = Jugador(100, ns.ALTO_NIVEL -64 - 49)
-        enemigo = Enemigo(400, ns.ALTO_NIVEL -64 - 49)
+        enemigo = EnemigoPequeno(400, ns.ALTO_NIVEL -64 - 64)
         suelo = Suelo()
         camara = pg.Rect(0, 0, ns.ANCHO_NIVEL, ns.ALTO_NIVEL)
 
@@ -67,6 +67,7 @@ class Nivel1:
             #print(jugador.hitbox.center)
 
             enemigo.dibujar(ventana)
+            enemigo.movimiento(jugador)
 
             suelo.dibujar_suelo(ventana)
 
