@@ -38,6 +38,7 @@ class Jugador(Entidad):
         self.tiempo_de_inicio_dash = 0
         self.cooldown_dash = 1000
         self.duracion_dash = 200
+        self.distancia_dash = 30
        
         self.tiempo_de_inicio = pg.time.get_ticks()
         
@@ -66,19 +67,23 @@ class Jugador(Entidad):
 
         if teclas[pg.K_LSHIFT] and tiempo_actual - self.ultimo_dash > self.cooldown_dash:
             if not self.dasheando:
-                if self.direccion == "DERECHA":
-                    self.rect.x += 50
-                    self.dasheando = True
-                    self.ultimo_dash = tiempo_actual
-                    self.tiempo_de_inicio_dash = tiempo_actual
-                if self.direccion == "IZQUIERDA":
-                    self.rect.x -= 50
-                    self.dasheando = True
-                    self.ultimo_dash = tiempo_actual
-                    self.tiempo_de_inicio_dash = tiempo_actual
+                self.dasheando = True
+                self.ultimo_dash = tiempo_actual
+                self.tiempo_de_inicio_dash = tiempo_actual
 
-        if self.dasheando and tiempo_actual - self.tiempo_de_inicio_dash > self.duracion_dash:
-            self.dasheando = False
+        if self.dasheando:
+            tiempo_dash = tiempo_actual - self.tiempo_de_inicio_dash
+            porcentaje_dash = min(tiempo_dash / self.distancia_dash, 1)
+
+            distancia_recorrida = self.distancia_dash * porcentaje_dash
+
+            if self.direccion == "DERECHA":
+                self.rect.x += distancia_recorrida
+            if self.direccion == "IZQUIERDA":
+                self.rect.x -= distancia_recorrida
+            
+            if tiempo_dash >= self.duracion_dash:
+                self.dasheando = False
 
         if self.en_el_aire:
             self.velocidad_y += self.gravedad
