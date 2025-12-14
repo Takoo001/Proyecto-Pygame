@@ -82,4 +82,3 @@ class EnemigoPequeno(Enemigo):
         # Sprites
         self.sprite_quieto = pg.image.load("assets\sprites_enemigos\enemigo_prueba.png").convert_alpha()
         self.imagen = self.sprite_quieto
-        self.direccion = "IZQUIERDA"
