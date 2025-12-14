@@ -21,13 +21,9 @@ class Jugador(Entidad):
         # Posición Hitbox
 
         # Frames de Sprites Corriendo
-        self.frame_corriendo = 0
-        self.frame_tiempo_corriendo = 0
-        self.frame_milisegundos_corriendo = 100
+        self.frame_milisegundos_corriendo = 50
 
         # Frames de Sprite Atacando
-        self.frame_ataque = 0
-        self.frame_tiempo_ataque = 0
         self.frame_milisegundos_ataque = 10
 
         # Frames de Sprites Girando
@@ -73,7 +69,6 @@ class Jugador(Entidad):
                     self.atacando = True
                     self.ultimo_ataque = tiempo_actual
                     self.tiempo_de_inicio_ataque = tiempo_actual
-                    self.animar_ataque()
 
         # Movimiento
         self.rect.x += mov_x * self.estadisticas["Velocidad"]
@@ -87,7 +82,7 @@ class Jugador(Entidad):
             if mov_x != 0:
                 self.animar_corriendo()
             else:
-                self.imagen = self.quieto
+                self.imagen = self.sprite_quieto
 
         if self.direccion == "DERECHA":
             self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
