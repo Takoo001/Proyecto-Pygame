@@ -32,7 +32,7 @@ class Entidad(pg.sprite.Sprite):
 
         # Sprites
         self.flip = False
-        self.sprite_quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
+        self.sprite_quieto = pg.image.load("assets\sprites_lautaro\lautaro_quieto.png").convert_alpha()
         self.sprite_corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
         self.imagen = self.sprite_quieto
         self.sprite_ataque = pg.image.load("assets\\sprites_lautaro\\ataque_prueba.png").convert_alpha()
