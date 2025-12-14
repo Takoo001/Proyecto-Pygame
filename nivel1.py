@@ -2,7 +2,7 @@ import pygame as pg
 import nivel_settings as ns
 
 from jugador import Jugador
-from enemigo import Enemigo
+from enemigo import EnemigoPequeno
 from suelo import Suelo
 
 class Nivel1:
@@ -18,7 +18,7 @@ class Nivel1:
 
         # Estableciendo posición de inicio 
         jugador = Jugador(100, ns.ALTO_NIVEL -64 - 49)
-        enemigo = Enemigo(400, ns.ALTO_NIVEL -64 - 49)
+        enemigo = EnemigoPequeno(400, ns.ALTO_NIVEL -64 - 64)
         suelo = Suelo()
         camara = pg.Rect(0, 0, ns.ANCHO_NIVEL, ns.ALTO_NIVEL)
 
@@ -62,18 +62,23 @@ class Nivel1:
 
             teclas = pg.key.get_pressed()
 
+            # Métodos Jugador
             jugador.movimiento(teclas)
             jugador.dibujar(ventana)
             #print(jugador.hitbox.center)
 
+            # Métodos Enemigos
             enemigo.dibujar(ventana)
+            enemigo.movimiento(jugador)
 
+            # Métodos Suelo
             suelo.dibujar_suelo(ventana)
 
             for i in suelo.lista_suelos:
                 if jugador.hitbox.colliderect(i):
                     jugador.restablecer_posicion(ns.ALTO_NIVEL -64 - 49)
 
+            # Sistema colisión ataque jugador con enemigo
             if jugador.atacando and not jugador.tick_ataque:
                 if jugador.ataque_hitbox.colliderect(enemigo.hitbox):
                     enemigo.estadisticas["Vida"] -= jugador.estadisticas["Daño"] 
@@ -82,6 +87,14 @@ class Nivel1:
                     if enemigo.estadisticas["Vida"] < 0:
                         print("Enemigo Muerto")
                     jugador.tick_ataque = True
+
+            # Sistema colisión ataque enemigo con jugador
+            if not jugador.dasheando:
+                if enemigo.atacando and not enemigo.tick_ataque:
+                    if enemigo.ataque_hitbox.colliderect(jugador.hitbox):
+                        jugador.estadisticas["Vida"] -= enemigo.estadisticas["Daño"]
+                        print("enemigo hizo daño")
+                        enemigo.tick_ataque = True
 
             mover_camara(camara, jugador.hitbox.center)
 

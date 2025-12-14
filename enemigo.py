@@ -9,13 +9,14 @@ class Enemigo(Entidad):
         # Estadisticas
         self.estadisticas["Vida"] = 50
         self.estadisticas["Daño"] = 10
-        self.estadisticas["Velocidad"] = 3
+        self.estadisticas["Velocidad"] = 2
 
         # Cooldown Ataque
-        self.cooldown = 5000
+        self.cooldown = 3000
+        self.inicio_ataque = 1000 # Iniciar el ataque 1 segundo después de detectar el área de ataque con el jugador
 
         # Posición Hitbox
-        self.hitbox = pg.Rect(self.x, self.y, 25, 35)
+        self.hitbox = pg.Rect(self.x, self.y, 64, 64)
         self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
 
         # Frames de Sprites Corriendo
@@ -25,14 +26,44 @@ class Enemigo(Entidad):
         self.frame_milisegundos_ataque = 10
 
         self.tiempo_de_inicio = pg.time.get_ticks()
-        
+
         if len(self.frames_ataque) > 0:
             self.imagen_ataque = self.frames_ataque[0]
 
-    # Bucle para recortar el sprite por el total de frames:
+    def movimiento(self, jugador):
+        tiempo_actual = pg.time.get_ticks()
 
-    def movimiento(self, teclas):
-        super().movimiento()
+        if self.hitbox.x > jugador.hitbox.x - 40:
+            self.rect.x -= 1 * self.estadisticas["Velocidad"]
+            self.direccion = "IZQUIERDA"
+            self.flip = True
+            if self.ataque_hitbox.colliderect(jugador.hitbox):
+                if tiempo_actual - self.ultimo_ataque > self.cooldown and tiempo_actual - self.inicio_ataque:
+                    if not self.atacando:
+                        self.atacando = True
+                        self.ultimo_ataque = tiempo_actual
+                        self.inicio_ataque = tiempo_actual
+
+        if self.hitbox.x < jugador.hitbox.x + 40:
+            self.rect.x += 1 * self.estadisticas["Velocidad"]
+            self.direccion = "DERECHA"
+            self.flip = False
+            if self.ataque_hitbox.colliderect(jugador.hitbox):
+                if tiempo_actual - self.ultimo_ataque > self.cooldown and tiempo_actual - self.inicio_ataque:
+                    if not self.atacando:
+                        self.atacando = True
+                        self.ultimo_ataque = tiempo_actual
+                        self.inicio_ataque = tiempo_actual
+
+        self.hitbox.center = self.rect.center
+
+        if self.direccion == "DERECHA":
+            self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
+        if self.direccion == "IZQUIERDA":
+            self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 48, 64, 64)
+
+        if self.atacando:
+            self.animar_ataque()
 
     def dibujar(self, ventana):
         if self.atacando:
@@ -43,14 +74,11 @@ class Enemigo(Entidad):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
         ventana.blit(imagen_flip, self.rect.topleft)
         pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
-
-class EnemigoPequeño(Enemigo):
+    
+class EnemigoPequeno(Enemigo):
     def __init__(self, x, y):
         super().__init__(x, y)
 
         # Sprites
-        self.quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
-        self.corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
-        self.imagen = self.quieto
-        self.sprite_ataque = pg.image.load("assets\\sprites_lautaro\\ataque_prueba.png").convert_alpha()
-        self.imagen_ataque = None
+        self.sprite_quieto = pg.image.load("assets\sprites_enemigos\enemigo_prueba.png").convert_alpha()
+        self.imagen = self.sprite_quieto
