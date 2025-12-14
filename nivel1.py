@@ -2,6 +2,7 @@ import pygame as pg
 import nivel_settings as ns
 
 from jugador import Jugador
+from enemigo import Enemigo
 from suelo import Suelo
 
 class Nivel1:
@@ -17,6 +18,7 @@ class Nivel1:
 
         # Estableciendo posición de inicio 
         jugador = Jugador(100, ns.ALTO_NIVEL -64 - 49)
+        enemigo = Enemigo(400, ns.ALTO_NIVEL -64 - 49)
         suelo = Suelo()
         camara = pg.Rect(0, 0, ns.ANCHO_NIVEL, ns.ALTO_NIVEL)
 
@@ -62,12 +64,24 @@ class Nivel1:
 
             jugador.movimiento(teclas)
             jugador.dibujar(ventana)
+            #print(jugador.hitbox.center)
 
-            print(jugador.hitbox.center)
+            enemigo.dibujar(ventana)
+
             suelo.dibujar_suelo(ventana)
+
             for i in suelo.lista_suelos:
                 if jugador.hitbox.colliderect(i):
                     jugador.restablecer_posicion(ns.ALTO_NIVEL -64 - 49)
+
+            if jugador.atacando and not jugador.tick_ataque:
+                if jugador.ataque_hitbox.colliderect(enemigo.hitbox):
+                    enemigo.estadisticas["Vida"] -= jugador.estadisticas["Daño"] 
+                    print("Ataque conecto")
+                    print(enemigo.estadisticas["Vida"])
+                    if enemigo.estadisticas["Vida"] < 0:
+                        print("Enemigo Muerto")
+                    jugador.tick_ataque = True
 
             mover_camara(camara, jugador.hitbox.center)
 
