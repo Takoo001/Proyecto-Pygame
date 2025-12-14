@@ -4,7 +4,7 @@ import nivel_settings as ns
 class Entidad(pg.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-
+        
         # Estadisticas
         self.estadisticas = {
             "Vida": 100,
