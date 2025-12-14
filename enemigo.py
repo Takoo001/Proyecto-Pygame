@@ -5,7 +5,7 @@ from entidad import Entidad
 class Enemigo(Entidad):
     def __init__(self, x, y):
         super().__init__(x, y)
-
+        self.tipo_entidad = 2
         # Estadisticas
         self.estadisticas["Vida"] = 50
         self.estadisticas["Daño"] = 10
@@ -17,7 +17,7 @@ class Enemigo(Entidad):
 
         # Posición Hitbox
         self.hitbox = pg.Rect(self.x, self.y, 64, 64)
-        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery, 64, 64)
 
         # Frames de Sprites Corriendo
         self.frame_milisegundos = 100
@@ -33,10 +33,11 @@ class Enemigo(Entidad):
     def movimiento(self, jugador):
         tiempo_actual = pg.time.get_ticks()
 
-        if self.hitbox.x > jugador.hitbox.x - 40:
+        if self.hitbox.centerx > jugador.hitbox.centerx + 60:
             self.rect.x -= 1 * self.estadisticas["Velocidad"]
             self.direccion = "IZQUIERDA"
             self.flip = True
+
             if self.ataque_hitbox.colliderect(jugador.hitbox):
                 if tiempo_actual - self.ultimo_ataque > self.cooldown and tiempo_actual - self.inicio_ataque:
                     if not self.atacando:
@@ -44,10 +45,11 @@ class Enemigo(Entidad):
                         self.ultimo_ataque = tiempo_actual
                         self.inicio_ataque = tiempo_actual
 
-        if self.hitbox.x < jugador.hitbox.x + 40:
+        if self.hitbox.centerx < jugador.hitbox.centerx - 60:
             self.rect.x += 1 * self.estadisticas["Velocidad"]
             self.direccion = "DERECHA"
             self.flip = False
+
             if self.ataque_hitbox.colliderect(jugador.hitbox):
                 if tiempo_actual - self.ultimo_ataque > self.cooldown and tiempo_actual - self.inicio_ataque:
                     if not self.atacando:
@@ -58,9 +60,9 @@ class Enemigo(Entidad):
         self.hitbox.center = self.rect.center
 
         if self.direccion == "DERECHA":
-            self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
+            self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 32, 64, 64)
         if self.direccion == "IZQUIERDA":
-            self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 48, 64, 64)
+            self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 32, 64, 64)
 
         if self.atacando:
             self.animar_ataque()
