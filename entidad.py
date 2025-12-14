@@ -11,6 +11,9 @@ class Entidad(pg.sprite.Sprite):
             "Daño": 20,
             "Velocidad": 5
         }
+        
+        # Estado de la entidad
+        self.vivo = True
 
         # Parametros para velocidad y gravedad
         self.velocidad_y = 0
@@ -24,14 +27,14 @@ class Entidad(pg.sprite.Sprite):
         self.direccion = "DERECHA"
 
         # Lógica de cooldown de ataque
-        self.cooldown = 1000
+        self.cooldown = 500
         self.ultimo_ataque = 0
 
         # Sprites
         self.flip = False
-        self.quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
+        self.sprite_quieto = pg.image.load("assets\sprites_lautaro\Lautaro_base64.png").convert_alpha()
         self.sprite_corriendo = pg.image.load("assets\sprites_lautaro\lautaro_corriendo.png").convert_alpha()
-        self.imagen = self.quieto
+        self.imagen = self.sprite_quieto
         self.sprite_ataque = pg.image.load("assets\\sprites_lautaro\\ataque_prueba.png").convert_alpha()
         self.imagen_ataque = pg.image.load("assets\sprites_lautaro\giro_aire.png").convert_alpha()
 
