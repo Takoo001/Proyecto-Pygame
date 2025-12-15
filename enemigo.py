@@ -5,7 +5,6 @@ from entidad import Entidad
 class Enemigo(Entidad):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tipo_entidad = 2
         # Estadisticas
         self.estadisticas["Vida"] = 50
         self.estadisticas["Daño"] = 10
@@ -80,7 +79,19 @@ class Enemigo(Entidad):
 class EnemigoPequeno(Enemigo):
     def __init__(self, x, y):
         super().__init__(x, y)
-
         # Sprites
         self.sprite_quieto = pg.image.load("assets\sprites_enemigos\enemigo_prueba.png").convert_alpha()
         self.imagen = self.sprite_quieto
+        self.dano_recibido = pg.image.load("assets\sprites_lautaro\lautaro_quieto.png").convert_alpha() # Crear sprite de daño
+        if self.tick_dano_recibido:
+            self.imagen = self.dano_recibido
+
+    def dibujar(self, ventana):
+        if self.atacando:
+            ataque = pg.transform.flip(self.imagen_ataque, flip_x= self.flip, flip_y= False)
+            ventana.blit(ataque, self.ataque_hitbox.topleft)
+            pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 2)
+
+        imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
+        ventana.blit(imagen_flip, self.rect.topleft)
+        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
