@@ -5,7 +5,6 @@ from entidad import Entidad
 class Jugador(Entidad):
     def __init__(self, x, y):
         super().__init__(x, y)
-
         # Sprites
         self.sprite_girando = pg.image.load("assets\sprites_lautaro\giro_aire.png").convert_alpha()
         self.sprite_dash = pg.image.load("assets\sprites_lautaro\dash.png").convert_alpha()
@@ -47,6 +46,8 @@ class Jugador(Entidad):
 
     def movimiento(self, teclas):
         # Movimiento Jugador
+        posicion_camara = [0, 0]
+
         mov_x = 0
         mov_y = 0
         tiempo_actual = pg.time.get_ticks()
