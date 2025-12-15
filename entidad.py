@@ -15,6 +15,9 @@ class Entidad(pg.sprite.Sprite):
         # Estado de la entidad
         self.vivo = True
 
+        # Saber si recibio daño la entidad
+        self.tick_dano_recibido = False
+
         # Parametros para velocidad y gravedad
         self.velocidad_y = 0
         self.gravedad = 0.5
@@ -108,6 +111,10 @@ class Entidad(pg.sprite.Sprite):
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
         ventana.blit(imagen_flip, self.rect.topleft)
         pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
+
+    def muerto(self):
+        self.hitbox = pg.Rect(0, 0, 0, 0)
+        self.rect = pg.Rect(0, 0, 0, 0)
 
     def restablecer_posicion(self, y):
         self.rect.y = y
