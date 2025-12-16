@@ -1,6 +1,7 @@
 import pygame as pg
 import nivel_settings as ns
 from entidad import Entidad
+import random as rd
 
 class Enemigo(Entidad):
     def __init__(self, x, y):
@@ -8,7 +9,7 @@ class Enemigo(Entidad):
         # Estadisticas
         self.estadisticas["Vida"] = 50
         self.estadisticas["Daño"] = 10
-        self.estadisticas["Velocidad"] = 2
+        self.estadisticas["Velocidad"] = rd.randint(1, 2)
 
         # Cooldown Ataque
         self.cooldown = 3000
@@ -65,16 +66,6 @@ class Enemigo(Entidad):
 
         if self.atacando:
             self.animar_ataque()
-
-    def dibujar(self, ventana):
-        if self.atacando:
-            ataque = pg.transform.flip(self.imagen_ataque, flip_x= self.flip, flip_y= False)
-            ventana.blit(ataque, self.ataque_hitbox.topleft)
-            pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 2)
-
-        imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
-        ventana.blit(imagen_flip, self.rect.topleft)
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
     
 class EnemigoPequeno(Enemigo):
     def __init__(self, x, y):
@@ -85,13 +76,3 @@ class EnemigoPequeno(Enemigo):
         self.dano_recibido = pg.image.load("assets\sprites_lautaro\lautaro_quieto.png").convert_alpha() # Crear sprite de daño
         if self.tick_dano_recibido:
             self.imagen = self.dano_recibido
-
-    def dibujar(self, ventana):
-        if self.atacando:
-            ataque = pg.transform.flip(self.imagen_ataque, flip_x= self.flip, flip_y= False)
-            ventana.blit(ataque, self.ataque_hitbox.topleft)
-            pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 2)
-
-        imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
-        ventana.blit(imagen_flip, self.rect.topleft)
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
