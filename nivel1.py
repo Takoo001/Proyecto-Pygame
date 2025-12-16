@@ -21,7 +21,7 @@ class Nivel1:
             enemigo = EnemigoPequeno(i, ns.ALTO_NIVEL - 64 -64)
             enemigos_pequenos.append(enemigo)
 
-        suelo = Suelo()
+        suelo = Suelo(4)
         
         fondo_ancho = 2560
         fondo_alto = 480
