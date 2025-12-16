@@ -102,19 +102,20 @@ class Entidad(pg.sprite.Sprite):
 
             self.tiempo_de_inicio = tiempo_actual
     
-    def dibujar(self, ventana):
+    def dibujar(self, ventana, mundo_x):
         if self.atacando:
             ataque = pg.transform.flip(self.imagen_ataque, flip_x= self.flip, flip_y= False)
-            ventana.blit(ataque, self.ataque_hitbox.topleft)
+            ventana.blit(ataque, (self.ataque_hitbox.topleft[0] + mundo_x, self.ataque_hitbox.topleft[1]))
             pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 2)
 
         imagen_flip = pg.transform.flip(self.imagen, flip_x= self.flip, flip_y= False)
-        ventana.blit(imagen_flip, self.rect.topleft)
+        ventana.blit(imagen_flip, (self.rect.topleft[0] + mundo_x, self.rect.topleft[1]))
         pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
     def muerto(self):
         self.hitbox = pg.Rect(0, 0, 0, 0)
         self.rect = pg.Rect(0, 0, 0, 0)
+        self.ataque_hitbox = pg.Rect(0, 0, 0, 0)
 
     def restablecer_posicion(self, y):
         self.rect.y = y
