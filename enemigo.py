@@ -1,6 +1,7 @@
 import pygame as pg
 import nivel_settings as ns
 from entidad import Entidad
+import random as rd
 
 class Enemigo(Entidad):
     def __init__(self, x, y):
@@ -8,7 +9,7 @@ class Enemigo(Entidad):
         # Estadisticas
         self.estadisticas["Vida"] = 50
         self.estadisticas["Daño"] = 10
-        self.estadisticas["Velocidad"] = 2
+        self.estadisticas["Velocidad"] = rd.randint(1, 2)
 
         # Cooldown Ataque
         self.cooldown = 3000
