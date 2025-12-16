@@ -46,7 +46,6 @@ class Jugador(Entidad):
 
     def movimiento(self, teclas):
         # Movimiento Jugador
-        posicion_camara = [0, 0]
 
         mov_x = 0
         mov_y = 0
