@@ -11,7 +11,7 @@ class Suelo(pg.sprite.Sprite):
         for x in range(0, ns.ANCHO_NIVEL * 2, 64):
             self.lista_suelos.append(pg.Rect(x, ns.ALTO_NIVEL - 64, 64, 64))
 
-    def dibujar_suelo(self, ventana):
+    def dibujar_suelo(self, ventana, mundo_x):
         for suelo in self.lista_suelos:
-            ventana.blit(self.sprite_suelo, suelo.topleft)
+            ventana.blit(self.sprite_suelo, (suelo.topleft[0] + mundo_x, suelo.topleft[1]))
             #pg.draw.rect(ventana, (255, 0, 0), suelo, 1)
