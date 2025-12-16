@@ -14,7 +14,7 @@ class Nivel1:
         pg.display.set_caption("Nivel1")
 
         # Estableciendo posición de inicio 
-        jugador = Jugador(100, ns.ALTO_NIVEL -64 - 49)
+        jugador = Jugador(0, ns.ALTO_NIVEL -64 - 49)
         enemigos_pequenos = []
         
         for i in range(400, 1500, 200):
@@ -26,7 +26,7 @@ class Nivel1:
         fondo_ancho = 2560
         fondo_alto = 480
         fondo = pg.Surface((fondo_ancho, fondo_alto))
-        mundo_x = 0
+        camara_x = 0
         
         for i in range(fondo_ancho // ns.ANCHO_NIVEL):
             sprite_fondo = pg.image.load("assets\\sprites_fondo\\fondo_prueba.png").convert()
@@ -51,22 +51,27 @@ class Nivel1:
             ventana.fill(ns.BACKGROUND)
             teclas = pg.key.get_pressed()
 
-            ventana.blit(fondo, (mundo_x, 0))
-            mundo_x = -jugador.hitbox.centerx
+            ventana.blit(fondo, (camara_x, 0))
+            camara_x = -jugador.hitbox.x + 300
+
+            if camara_x >= 0:
+                camara_x = 0
+            if camara_x >= fondo_ancho - 64:
+                camara_x = fondo_ancho - 64
+
+            if jugador.rect.x <= 0:
+                jugador.rect.x = 0
+            if jugador.rect.x >= fondo_ancho - 64 - 300:
+                jugador.rect.x = fondo_ancho - 64 - 300
+
             # Métodos Jugador
             jugador.movimiento(teclas)
-            jugador.dibujar(ventana, mundo_x)
-            #print(jugador.hitbox.center)
-
-            if jugador.rect.left < 0:
-                jugador.rect.left = 0
-            if jugador.rect.right > ns.ANCHO_NIVEL:
-                jugador.rect.right = ns.ANCHO_NIVEL
-
+            jugador.dibujar(ventana, camara_x)
+            print(jugador.hitbox.center)
             # Métodos Enemigos
             for enemigo in enemigos_pequenos:
                 if enemigo.vivo:
-                    enemigo.dibujar(ventana, mundo_x)
+                    enemigo.dibujar(ventana, camara_x)
                     enemigo.movimiento(jugador)
 
                     # Sistema colisión ataque jugador con enemigo
@@ -97,7 +102,7 @@ class Nivel1:
                     enemigos_pequenos.remove(enemigo)
 
             # Métodos Suelo
-            suelo.dibujar_suelo(ventana, mundo_x)
+            suelo.dibujar_suelo(ventana, camara_x)
 
             for i in suelo.lista_suelos:
                 if jugador.hitbox.colliderect(i):
