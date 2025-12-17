@@ -84,7 +84,6 @@ class Entidad(pg.sprite.Sprite):
                 (self.ataque_hitbox.x + mundo_x,
                  self.ataque_hitbox.y + offset_y)
             )
-            pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 1)
 
         imagen = pg.transform.flip(self.imagen, self.flip, False)
         ventana.blit(
@@ -92,7 +91,6 @@ class Entidad(pg.sprite.Sprite):
             (self.rect.x + mundo_x,
              self.rect.y + offset_y)
         )
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 1)
 
     def muerto(self):
         self.hitbox = pg.Rect(0, 0, 0, 0)
