@@ -8,6 +8,22 @@ class Jugador(Entidad):
         # Sprites
         self.sprite_girando = pg.image.load("assets\sprites_lautaro\giro_aire.png").convert_alpha()
         self.sprite_dash = pg.image.load("assets\sprites_lautaro\dash.png").convert_alpha()
+        self.sprite_salud = pg.image.load("assets\sprites_corazones\corazones_100.png").convert_alpha()
+
+        # Sprites barra salud:
+        self.sprites_corazones = [
+            pg.image.load("assets\sprites_corazones\corazones_0.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_10.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_20.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_30.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_40.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_50.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_60.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_70.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_80.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_90.png").convert_alpha(),
+            pg.image.load("assets\sprites_corazones\corazones_100.png").convert_alpha()
+        ]
 
         # Recorte sprites por sus frames
         self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 12, 64, 64)
@@ -38,11 +54,12 @@ class Jugador(Entidad):
         self.cooldown_dash = 1000
         self.duracion_dash = 200
         self.distancia_dash = 30
-       
+
         self.tiempo_de_inicio = pg.time.get_ticks()
         
         if len(self.frames_ataque) > 0:
             self.imagen_ataque = self.frames_ataque[0]
+
 
     def movimiento(self, teclas):
         # Movimiento Jugador
@@ -99,7 +116,7 @@ class Jugador(Entidad):
                     self.tiempo_de_inicio_ataque = tiempo_actual
 
         # Movimiento
-        self.rect.x += mov_x * self.estadisticas["Velocidad"]
+        self.rect.x += mov_x * self.velocidad
 
         self.rect.y += mov_y
         self.hitbox.center = self.rect.center
@@ -139,3 +156,29 @@ class Jugador(Entidad):
             self.frame_dasheando = (self.frame_dasheando + 1) % len(self.frames_dasheando)
             self.imagen = self.frames_dasheando[self.frame_dasheando]
             self.tiempo_de_inicio = tiempo_actual
+
+    def dibujar_corazones(self, ventana):
+        ventana.blit(self.sprite_salud, (0, 0))
+
+        if self.vida <= 0:
+            self.sprite_salud = self.sprites_corazones[0]
+        elif self.vida <= 10:
+            self.sprite_salud = self.sprites_corazones[1]
+        elif self.vida <= 20:
+            self.sprite_salud = self.sprites_corazones[2]
+        elif self.vida <= 30:
+            self.sprite_salud = self.sprites_corazones[3]
+        elif self.vida <= 40:
+            self.sprite_salud = self.sprites_corazones[4]
+        elif self.vida <= 50:
+            self.sprite_salud = self.sprites_corazones[5]
+        elif self.vida <= 60:
+            self.sprite_salud = self.sprites_corazones[6]
+        elif self.vida <= 70:
+            self.sprite_salud = self.sprites_corazones[7]
+        elif self.vida <= 80:
+            self.sprite_salud = self.sprites_corazones[8]
+        elif self.vida <= 90:
+            self.sprite_salud = self.sprites_corazones[9]
+        else:
+            self.sprite_salud = self.sprites_corazones[10]

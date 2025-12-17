@@ -6,11 +6,9 @@ class Entidad(pg.sprite.Sprite):
         super().__init__()
         
         # Estadisticas
-        self.estadisticas = {
-            "Vida": 100,
-            "Daño": 20,
-            "Velocidad": 5
-        }
+        self.vida = 100
+        self.dano = 20
+        self.velocidad = 5
         
         # Estado de la entidad
         self.vivo = True

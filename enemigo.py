@@ -7,9 +7,9 @@ class Enemigo(Entidad):
     def __init__(self, x, y):
         super().__init__(x, y)
         # Estadisticas
-        self.estadisticas["Vida"] = 50
-        self.estadisticas["Daño"] = 10
-        self.estadisticas["Velocidad"] = rd.randint(1, 2)
+        self.vida = 50
+        self.dano = 5
+        self.velocidad = rd.randint(1, 2)
 
         # Cooldown Ataque
         self.cooldown = 3000
@@ -34,7 +34,7 @@ class Enemigo(Entidad):
         tiempo_actual = pg.time.get_ticks()
 
         if self.hitbox.centerx > jugador.hitbox.centerx + 60:
-            self.rect.x -= 1 * self.estadisticas["Velocidad"]
+            self.rect.x -= 1 * self.velocidad
             self.direccion = "IZQUIERDA"
             self.flip = True
 
@@ -46,7 +46,7 @@ class Enemigo(Entidad):
                         self.inicio_ataque = tiempo_actual
 
         if self.hitbox.centerx < jugador.hitbox.centerx - 60:
-            self.rect.x += 1 * self.estadisticas["Velocidad"]
+            self.rect.x += 1 * self.velocidad
             self.direccion = "DERECHA"
             self.flip = False
 
