@@ -74,8 +74,9 @@ class Nivel1:
             camara_x = min(camara_x, 0)
 
             jugador.rect.x = max(
-                0, min(jugador.rect.x, fondo_ancho - 64 - 300)
+                0, min(jugador.rect.x, fondo_ancho - 64 - 1280)
             )
+
 
             self.pantalla.fill(ns.BACKGROUND)
             self.pantalla.blit(fondo, (camara_x, 0))
