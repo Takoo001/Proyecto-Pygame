@@ -1,5 +1,4 @@
 import pygame as pg
-import nivel_settings as ns
 from entidad import Entidad
 
 class Jugador(Entidad):
