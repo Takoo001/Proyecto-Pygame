@@ -1,5 +1,4 @@
 import pygame as pg
-import nivel_settings as ns
 from entidad import Entidad
 import random as rd
 
@@ -8,7 +7,7 @@ class Enemigo(Entidad):
         super().__init__(x, y)
 
         self.vida = 50
-        self.dano = 5
+        self.dano = 2
         self.velocidad = rd.randint(1, 2)
 
         self.cooldown = 1000
@@ -45,7 +44,6 @@ class Enemigo(Entidad):
         else:
             self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 32, 64, 64)
 
-        # 🔥 DAÑO AL JUGADOR (ESTO ES LO QUE FALTABA)
         if self.ataque_hitbox.colliderect(jugador.hitbox):
             if tiempo_actual - self.ultimo_ataque > self.cooldown:
                 jugador.vida -= self.dano
@@ -61,7 +59,9 @@ class EnemigoPequeno(Enemigo):
         super().__init__(x, y)
 
         self.sprite_quieto = pg.image.load(
-            "assets/images/sprites_enemigos/enemigo_prueba.png"
+            "assets/sprites_enemigos/español_pequeño_quieto.png"
         ).convert_alpha()
-
         self.imagen = self.sprite_quieto
+        self.sprite_corriendo = pg.image.load(
+            "assets/sprites_enemigos/español_pequeño_corriendo.png"
+        ).convert_alpha()

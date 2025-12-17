@@ -1,5 +1,4 @@
 import pygame as pg
-import nivel_settings as ns
 
 class Entidad(pg.sprite.Sprite):
     def __init__(self, x, y):
