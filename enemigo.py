@@ -6,23 +6,18 @@ import random as rd
 class Enemigo(Entidad):
     def __init__(self, x, y):
         super().__init__(x, y)
-        # Estadisticas
+
         self.vida = 50
         self.dano = 5
         self.velocidad = rd.randint(1, 2)
 
-        # Cooldown Ataque
-        self.cooldown = 3000
-        self.inicio_ataque = 1000 # Iniciar el ataque 1 segundo después de detectar el área de ataque con el jugador
+        self.cooldown = 1000
+        self.ultimo_ataque = 0
 
-        # Posición Hitbox
         self.hitbox = pg.Rect(self.x, self.y, 64, 64)
-        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery, 64, 64)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx, self.rect.centery, 64, 64)
 
-        # Frames de Sprites Corriendo
         self.frame_milisegundos = 100
-
-        # Frames de Sprite Atacando
         self.frame_milisegundos_ataque = 10
 
         self.tiempo_de_inicio = pg.time.get_ticks()
@@ -34,45 +29,39 @@ class Enemigo(Entidad):
         tiempo_actual = pg.time.get_ticks()
 
         if self.hitbox.centerx > jugador.hitbox.centerx + 60:
-            self.rect.x -= 1 * self.velocidad
+            self.rect.x -= self.velocidad
             self.direccion = "IZQUIERDA"
             self.flip = True
 
-            if self.ataque_hitbox.colliderect(jugador.hitbox):
-                if tiempo_actual - self.ultimo_ataque > self.cooldown and tiempo_actual - self.inicio_ataque:
-                    if not self.atacando:
-                        self.atacando = True
-                        self.ultimo_ataque = tiempo_actual
-                        self.inicio_ataque = tiempo_actual
-
-        if self.hitbox.centerx < jugador.hitbox.centerx - 60:
-            self.rect.x += 1 * self.velocidad
+        elif self.hitbox.centerx < jugador.hitbox.centerx - 60:
+            self.rect.x += self.velocidad
             self.direccion = "DERECHA"
             self.flip = False
-
-            if self.ataque_hitbox.colliderect(jugador.hitbox):
-                if tiempo_actual - self.ultimo_ataque > self.cooldown and tiempo_actual - self.inicio_ataque:
-                    if not self.atacando:
-                        self.atacando = True
-                        self.ultimo_ataque = tiempo_actual
-                        self.inicio_ataque = tiempo_actual
 
         self.hitbox.center = self.rect.center
 
         if self.direccion == "DERECHA":
             self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 32, 64, 64)
-        if self.direccion == "IZQUIERDA":
+        else:
             self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 32, 64, 64)
+
+        # 🔥 DAÑO AL JUGADOR (ESTO ES LO QUE FALTABA)
+        if self.ataque_hitbox.colliderect(jugador.hitbox):
+            if tiempo_actual - self.ultimo_ataque > self.cooldown:
+                jugador.vida -= self.dano
+                self.ultimo_ataque = tiempo_actual
+                self.atacando = True
 
         if self.atacando:
             self.animar_ataque()
-    
+
+
 class EnemigoPequeno(Enemigo):
     def __init__(self, x, y):
         super().__init__(x, y)
-        # Sprites
-        self.sprite_quieto = pg.image.load("assets\sprites_enemigos\enemigo_prueba.png").convert_alpha()
+
+        self.sprite_quieto = pg.image.load(
+            "assets/images/sprites_enemigos/enemigo_prueba.png"
+        ).convert_alpha()
+
         self.imagen = self.sprite_quieto
-        self.dano_recibido = pg.image.load("assets\sprites_lautaro\lautaro_quieto.png").convert_alpha() # Crear sprite de daño
-        if self.tick_dano_recibido:
-            self.imagen = self.dano_recibido

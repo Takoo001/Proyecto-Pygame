@@ -1,115 +1,125 @@
 import pygame as pg
+import time
 import nivel_settings as ns
 
 from jugador import Jugador
 from enemigo import EnemigoPequeno
 from suelo import Suelo
 
+
 class Nivel1:
+    def __init__(self, pantalla):
+        self.pantalla = pantalla
+        self.reloj = pg.time.Clock()
+        self.running = True
 
     def iniciar(self):
-        pg.init()
 
-        ventana = pg.display.set_mode((ns.ANCHO_NIVEL, ns.ALTO_NIVEL))
-        pg.display.set_caption("Nivel1")
-
-        # Estableciendo posición de inicio 
-        jugador = Jugador(0, ns.ALTO_NIVEL -64 - 49)
+        jugador = Jugador(0, ns.ALTO_NIVEL - 64 - 49)
         enemigos_pequenos = []
 
         largo_mapa = 6
-
         suelo = Suelo(largo_mapa)
-        
+
         fondo_ancho = 640 * largo_mapa
-        fondo_alto = 480
+        fondo_alto = self.pantalla.get_height()
         fondo = pg.Surface((fondo_ancho, fondo_alto))
+
         camara_x = 0
-    
+        offset_y = self.pantalla.get_height() - ns.ALTO_NIVEL
+
+        game_over_img = pg.image.load(
+            "assets/images/fondos/game_over.png"
+        ).convert_alpha()
+
+        game_over_img = pg.transform.scale(
+            game_over_img,
+            self.pantalla.get_size()
+        )
+
+        game_over = False
+        tiempo_game_over = 0
+
+
+        # Enemigos
         for i in range(400, fondo_ancho, 400):
-            enemigo = EnemigoPequeno(i, ns.ALTO_NIVEL - 64 -64)
+            enemigo = EnemigoPequeno(i, ns.ALTO_NIVEL - 64 - 64)
             enemigos_pequenos.append(enemigo)
 
-        for i in range(fondo_ancho // ns.ANCHO_NIVEL):
-            sprite_fondo = pg.image.load("assets\\sprites_fondo\\ia_4.png").convert()
+        # Fondo
+        sprite_fondo = pg.image.load(
+            "assets/images/fondos/ia_4.png"
+        ).convert()
+
+        sprite_fondo = pg.transform.scale(
+            sprite_fondo,
+            (640, fondo_alto)
+        )
+
+        for i in range(fondo_ancho // 640):
             fondo.blit(sprite_fondo, (i * 640, 0))
 
-        # Reloj para fps
-        reloj = pg.time.Clock()
+        while self.running:
+            self.reloj.tick(60)
 
-        # Bucle para mantener abierto el nivel
-        running = True
-        while running:
-
-            reloj.tick(60)
             for event in pg.event.get():
-                if event.type == pg.QUIT: 
-                    running = False
+                if event.type == pg.QUIT:
+                    self.running = False
 
-            ventana.fill(ns.BACKGROUND)
             teclas = pg.key.get_pressed()
 
-            ventana.blit(fondo, (camara_x, 0))
-            camara_x = (-jugador.rect.x + 300)
+            # Cámara
+            camara_x = -jugador.rect.x + 300
+            camara_x = max(camara_x, -(fondo_ancho - ns.ANCHO_NIVEL))
+            camara_x = min(camara_x, 0)
 
-            if camara_x >= 0:
-                camara_x = 0
-            if camara_x >= fondo_ancho - 64:
-                camara_x = fondo_ancho - 64
+            jugador.rect.x = max(0, min(jugador.rect.x, fondo_ancho - 64 - 300))
 
-            if jugador.rect.x <= 0:
-                jugador.rect.x = 0
-            if jugador.rect.x >= fondo_ancho - 64 - 300:
-                jugador.rect.x = fondo_ancho - 64 - 300
+            # Movimiento jugador
+            if not game_over:
+                jugador.movimiento(teclas)
 
-            # Métodos Jugador
-            jugador.movimiento(teclas)
-            jugador.dibujar(ventana, camara_x)
-            jugador.dibujar_corazones(ventana)
+            if jugador.vida <= 0 and not game_over:
+                game_over = True
+                tiempo_game_over = pg.time.get_ticks()
 
-            print(jugador.vida)
-            # Métodos Enemigos
-            for enemigo in enemigos_pequenos:
-                if enemigo.vivo:
-                    enemigo.dibujar(ventana, camara_x)
-                    enemigo.movimiento(jugador)
+            self.pantalla.fill(ns.BACKGROUND)
+            self.pantalla.blit(fondo, (camara_x, 0))
 
-                    # Sistema colisión ataque jugador con enemigo
-                    if jugador.atacando and not jugador.tick_ataque:
-                        if jugador.ataque_hitbox.colliderect(enemigo.hitbox):
-                            enemigo.vida -= jugador.dano             
-                            print("Ataque conecto")
-                            print(enemigo.vida)
-                            enemigo.tick_dano_recibido = True
+            if not game_over:
+                jugador.dibujar(self.pantalla, camara_x, offset_y)
+                jugador.dibujar_corazones(self.pantalla)
 
-                            if enemigo.vida <= 0:
-                                print("Enemigo Muerto")
-                                enemigo.vivo = False
-                                jugador.vida += 20
-                                if jugador.vida > 100:
-                                    jugador.vida = 100
-                            jugador.tick_ataque = True
+                for enemigo in enemigos_pequenos[:]:
+                    if enemigo.vivo:
+                        enemigo.dibujar(self.pantalla, camara_x, offset_y)
+                        enemigo.movimiento(jugador)
 
-                    # Sistema colisión ataque enemigo con jugador
-                    if not jugador.dasheando:
-                        if enemigo.atacando and not enemigo.tick_ataque:
-                            if enemigo.ataque_hitbox.colliderect(jugador.hitbox):
-                                jugador.vida -= enemigo.dano
-                                print("enemigo hizo daño")
-                                enemigo.tick_ataque = True
-                else:
-                    enemigo.muerto()
-                    enemigos_pequenos.remove(enemigo)
+                        if jugador.atacando and not jugador.tick_ataque:
+                            if jugador.ataque_hitbox.colliderect(enemigo.hitbox):
+                                enemigo.vida -= jugador.dano
+                                enemigo.tick_dano_recibido = True
 
-            # Métodos Suelo
-            suelo.dibujar_suelo(ventana, camara_x)
+                                if enemigo.vida <= 0:
+                                    enemigo.vivo = False
+                                    jugador.vida = min(jugador.vida + 20, 100)
 
-            for i in suelo.lista_suelos:
-                if jugador.hitbox.colliderect(i):
-                    jugador.restablecer_posicion(ns.ALTO_NIVEL -64 - 49)
-            
-            pg.display.update()
+                                jugador.tick_ataque = True
+                    else:
+                        enemigo.muerto()
+                        enemigos_pequenos.remove(enemigo)
 
-        pg.quit()
+                suelo.dibujar_suelo(self.pantalla, camara_x, offset_y)
 
-Nivel1().iniciar()
+                for tile in suelo.lista_suelos:
+                    if jugador.hitbox.colliderect(tile):
+                        jugador.restablecer_posicion(ns.ALTO_NIVEL - 64 - 49)
+
+            else:
+                self.pantalla.blit(game_over_img, (0, 0))
+
+                if pg.time.get_ticks() - tiempo_game_over > 2500:
+                    self.running = False
+                    return
+
+            pg.display.flip()

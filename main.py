@@ -1,68 +1,101 @@
 import pygame
 import sys
 import time
+import os
 
 from settings import *
 from menu import menu
+from nivel1 import Nivel1
 
-# Cargar imagenes
+SUPERFICIE_CARGA = pygame.Surface((ANCHO, ALTO))
+
 logo = pygame.image.load(RUTA_LOGO).convert_alpha()
-pj_caminando = pygame.image.load(RUTA_PJ_CAMINANDO).convert_alpha()
 
-fuente_carga = pygame.font.Font(None, 70)
+fondo_carga = pygame.image.load(RUTA_FONDO_CARGA).convert()
+fondo_carga = pygame.transform.scale(fondo_carga, (ANCHO, ALTO))
+
+
+sprite_cargando = pygame.image.load(RUTA_FONDO_CARGANDO).convert_alpha()
+
+CARGANDO_FRAMES = 4
+indice_frame = 0
+contador_frame = 0
+VEL_ANIM_CARGA = 12  
+
+ancho_frame = sprite_cargando.get_width() // CARGANDO_FRAMES
+alto_frame = sprite_cargando.get_height()
+
+frames_cargando = []
+for i in range(CARGANDO_FRAMES):
+    frame = sprite_cargando.subsurface(
+        pygame.Rect(i * ancho_frame, 0, ancho_frame, alto_frame)
+    )
+    frames_cargando.append(frame)
+
+
+def blit_estirado(superficie, pantalla):
+    superficie_escalada = pygame.transform.scale(superficie, pantalla.get_size())
+    pantalla.blit(superficie_escalada, (0, 0))
 
 
 def animacion_inicio():
-    escala = 0.1
-    escala_final = 1.0
+    global indice_frame, contador_frame
 
+    escala = ESCALA_LOGO_INICIAL
     x_logo = ANCHO // 2
     y_logo = ALTO // 2
-    y_logo_final = ALTO * 0.13
+    y_logo_final = int(ALTO * 0.16)
 
-    puntos = 0
-    tiempo_puntos = 0
-
-    while escala < escala_final or y_logo > y_logo_final:
-
+    while escala < ESCALA_LOGO_FINAL or y_logo > y_logo_final:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-        PANTALLA.fill((0, 0, 0))
+        SUPERFICIE_CARGA.blit(fondo_carga, (0, 0))
 
-        if escala < escala_final:
-            escala += 0.02
+        # Escalado logo
+        if escala < ESCALA_LOGO_FINAL:
+            escala += VELOCIDAD_ESCALA_LOGO
 
         logo_escalado = pygame.transform.scale(
             logo,
-            (int(logo.get_width() * escala), int(logo.get_height() * escala))
+            (
+                int(logo.get_width() * escala),
+                int(logo.get_height() * escala)
+            )
         )
         rect_logo = logo_escalado.get_rect(center=(x_logo, y_logo))
-        PANTALLA.blit(logo_escalado, rect_logo)
+        SUPERFICIE_CARGA.blit(logo_escalado, rect_logo)
 
-        if escala >= escala_final and y_logo > y_logo_final:
+        if escala >= ESCALA_LOGO_FINAL and y_logo > y_logo_final:
             y_logo -= 10
 
-        tiempo_puntos += 1
-        if tiempo_puntos > 30:
-            puntos = (puntos + 1) % 4
-            tiempo_puntos = 0
+        # Animacion de lcargando
+        contador_frame += 1
+        if contador_frame >= VEL_ANIM_CARGA:
+            contador_frame = 0
+            indice_frame = (indice_frame + 1) % CARGANDO_FRAMES
 
-        texto = "Cargando" + "." * puntos
-        render_carga = fuente_carga.render(texto, True, BLANCO)
-        PANTALLA.blit(render_carga, (ANCHO * 0.70, ALTO * 0.85))
+        frame = frames_cargando[indice_frame]
+        rect = frame.get_rect(center=(ANCHO // 2, int(ALTO * 0.85)))
+        SUPERFICIE_CARGA.blit(frame, rect)
 
-        pj_escalado = pygame.transform.scale(pj_caminando, (120, 120))
-        PANTALLA.blit(pj_escalado, (ANCHO * 0.15, ALTO * 0.78))
-
+        blit_estirado(SUPERFICIE_CARGA, PANTALLA)
         pygame.display.flip()
         RELOJ.tick(60)
 
     time.sleep(0.8)
 
 
+# Ejecucion
 if __name__ == "__main__":
     animacion_inicio()
-    menu()
+    pygame.event.clear()
+
+    accion = menu()
+
+    if accion == "jugar":
+        pygame.mixer.music.stop()
+        nivel = Nivel1(PANTALLA)
+        nivel.iniciar()

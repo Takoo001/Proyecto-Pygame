@@ -6,23 +6,23 @@ class Jugador(Entidad):
     def __init__(self, x, y):
         super().__init__(x, y)
         # Sprites
-        self.sprite_girando = pg.image.load("assets\sprites_lautaro\giro_aire.png").convert_alpha()
-        self.sprite_dash = pg.image.load("assets\sprites_lautaro\dash.png").convert_alpha()
-        self.sprite_salud = pg.image.load("assets\sprites_corazones\corazones_100.png").convert_alpha()
+        self.sprite_girando = pg.image.load("assets/images/personajes/giro_aire.png").convert_alpha()
+        self.sprite_dash = pg.image.load("assets/images/personajes/dash.png").convert_alpha()
+        self.sprite_salud = pg.image.load("assets/images/corazones/corazones_100.png").convert_alpha()
 
         # Sprites barra salud:
         self.sprites_corazones = [
-            pg.image.load("assets\sprites_corazones\corazones_0.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_10.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_20.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_30.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_40.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_50.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_60.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_70.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_80.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_90.png").convert_alpha(),
-            pg.image.load("assets\sprites_corazones\corazones_100.png").convert_alpha()
+            pg.image.load("assets/images/corazones/corazones_0.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_10.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_20.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_30.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_40.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_50.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_60.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_70.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_80.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_90.png").convert_alpha(),
+            pg.image.load("assets/images/corazones/corazones_100.png").convert_alpha()
         ]
 
         # Recorte sprites por sus frames
