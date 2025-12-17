@@ -28,7 +28,7 @@ class Nivel1:
         jugador = Jugador(0, ns.ALTO_NIVEL - 64 - 49)
         enemigos_pequenos = []
 
-        largo_mapa = 6
+        largo_mapa = 20
         suelo = Suelo(largo_mapa)
 
         fondo_ancho = 640 * largo_mapa
@@ -38,13 +38,13 @@ class Nivel1:
         camara_x = 0
         offset_y = self.pantalla.get_height() - ns.ALTO_NIVEL
 
-        for i in range(400, fondo_ancho, 400):
+        for i in range(400, fondo_ancho, 800):
             enemigos_pequenos.append(
                 EnemigoPequeno(i, ns.ALTO_NIVEL - 64 - 64)
             )
 
         sprite_fondo = pg.image.load(
-            "assets/images/fondos/ia_4.png"
+            "assets/sprites_fondo/fondo_bosque_2.png"
         ).convert()
 
         sprite_fondo = pg.transform.scale(
@@ -69,7 +69,7 @@ class Nivel1:
 
             teclas = pg.key.get_pressed()
 
-            camara_x = -jugador.rect.x + 300
+            camara_x = -jugador.rect.x + 600
             camara_x = max(camara_x, -(fondo_ancho - ns.ANCHO_NIVEL))
             camara_x = min(camara_x, 0)
 
