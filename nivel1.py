@@ -63,11 +63,9 @@ class Nivel1:
                 if event.type == pg.QUIT:
                     self.running = False
 
-            # ================= GAME OVER =================
             if self.game_over:
                 self.animar_game_over()
                 continue
-            # ============================================
 
             teclas = pg.key.get_pressed()
 
@@ -114,7 +112,6 @@ class Nivel1:
                         ns.ALTO_NIVEL - 64 - 49
                     )
 
-            # --------- DETECTAR MUERTE ----------
             if jugador.vida <= 0:
                 self.game_over = True
                 self.tiempo_game_over = pg.time.get_ticks()
@@ -124,9 +121,6 @@ class Nivel1:
 
         pg.quit()
 
-    # ===============================
-    # animacion game over
-    # ===============================
     def animar_game_over(self):
         tiempo_actual = pg.time.get_ticks()
 
@@ -150,6 +144,5 @@ class Nivel1:
         self.pantalla.blit(img, rect)
         pg.display.flip()
 
-        # volver al menu despues de 3 segundos
         if tiempo_actual - self.tiempo_game_over > 3000:
             self.running = False
