@@ -39,8 +39,6 @@ class Enemigo(Entidad):
             self.direccion = "DERECHA"
             self.flip = False
 
-        self.hitbox.center = self.rect.center
-
         if self.direccion == "DERECHA":
             self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 32, 64, 64)
         else:
@@ -53,6 +51,7 @@ class Enemigo(Entidad):
                 self.atacando = True
 
         self.rect.x += mov_x
+        self.hitbox.center = self.rect.center
 
         if self.atacando:
             self.animar_ataque()
@@ -76,5 +75,8 @@ class EnemigoPequeno(Enemigo):
         self.frames_ataque = self.recortar_frames(self.sprite_ataque, 12, 64, 64)
 
         # Modificando cooldown de ataque y rapidez de frames
-        self.cooldown = 2000
+        self.cooldown = 4000
         self.frame_milisegundos_ataque = 50
+
+        self.hitbox = pg.Rect(self.x, self.y, 25, 35)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery, 64, 64)
