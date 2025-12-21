@@ -66,9 +66,9 @@ class EnemigoPequeno(Enemigo):
         super().__init__(x, y)
 
         # Sprites de Enemigo Pequeño
-        self.sprite_quieto = pg.image.load("assets/sprites_enemigos/español_pequeño_quieto.png").convert_alpha()
-        self.sprite_corriendo = pg.image.load("assets/sprites_enemigos/español_pequeño_corriendo.png").convert_alpha()
-        self.sprite_ataque = pg.image.load("assets/sprites_enemigos/ataque_español_pequeño.png").convert_alpha()
+        self.sprite_quieto = pg.image.load("assets/sprites/sprites_enemigos/español_pequeño_quieto.png").convert_alpha()
+        self.sprite_corriendo = pg.image.load("assets/sprites/sprites_enemigos/español_pequeño_corriendo.png").convert_alpha()
+        self.sprite_ataque = pg.image.load("assets/sprites/sprites_enemigos/ataque_español_pequeño.png").convert_alpha()
 
         # Sprites
         self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 8, 64, 64)

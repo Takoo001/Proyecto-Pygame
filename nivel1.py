@@ -25,7 +25,7 @@ class Nivel1:
 
     def iniciar(self):
 
-        jugador = Jugador(0, ns.ALTO_NIVEL - 64 - 49)
+        jugador = Jugador(0, ns.ALTO_NIVEL - 64 - 64 - 64)
         enemigos_pequenos = []
 
         largo_mapa = 20
@@ -44,7 +44,7 @@ class Nivel1:
             )
 
         sprite_fondo = pg.image.load(
-            "assets/sprites_fondo/fondo_bosque_2.png"
+            "assets/sprites/sprites_fondo/fondo_bosque.png"
         ).convert()
 
         sprite_fondo = pg.transform.scale(
@@ -110,7 +110,7 @@ class Nivel1:
             for tile in suelo.lista_suelos:
                 if jugador.hitbox.colliderect(tile):
                     jugador.restablecer_posicion(
-                        ns.ALTO_NIVEL - 64 - 49
+                        ns.ALTO_NIVEL - 64 - 64
                     )
 
             if jugador.vida <= 0:

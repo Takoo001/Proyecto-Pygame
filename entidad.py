@@ -24,13 +24,13 @@ class Entidad(pg.sprite.Sprite):
         self.ultimo_ataque = 0
 
         self.flip = False
-        self.sprite_quieto = pg.image.load("assets/images/personajes/lautaro_quieto.png").convert_alpha()
-        self.sprite_corriendo = pg.image.load("assets/images/personajes/lautaro_corriendo.png").convert_alpha()
+        self.sprite_quieto = pg.image.load("assets/sprites/sprites_lautaro/lautaro_quieto.png").convert_alpha()
+        self.sprite_corriendo = pg.image.load("assets/sprites/sprites_lautaro/lautaro_corriendo.png").convert_alpha()
         self.imagen = self.sprite_quieto
-        self.sprite_ataque = pg.image.load("assets/images/personajes/ataque_prueba.png").convert_alpha()
-        self.imagen_ataque = pg.image.load("assets/images/personajes/ataque_prueba.png").convert_alpha()
+        self.sprite_ataque = pg.image.load("assets/sprites/sprites_lautaro/ataque_prueba.png").convert_alpha()
+        self.imagen_ataque = pg.image.load("assets/sprites/sprites_lautaro/ataque_prueba.png").convert_alpha()
 
-        self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 12, 64, 64)
+        self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 8, 64, 64)
         self.frames_ataque = self.recortar_frames(self.sprite_ataque, 7, 64, 64)
 
         self.x = x
