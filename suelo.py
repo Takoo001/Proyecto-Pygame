@@ -14,8 +14,5 @@ class Suelo(pg.sprite.Sprite):
 
     def dibujar_suelo(self, ventana, mundo_x, offset_y):
         for suelo in self.lista_suelos:
-            ventana.blit(
-                self.sprite_suelo,
-                (suelo.x + mundo_x,
-                 suelo.y + offset_y)
-            )
+            pg.draw.rect(ventana, (255, 0, 0), suelo, 2)
+            ventana.blit(self.sprite_suelo, (suelo.x + mundo_x, suelo.y + offset_y))

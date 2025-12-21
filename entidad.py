@@ -36,8 +36,8 @@ class Entidad(pg.sprite.Sprite):
         self.x = x
         self.y = y
         self.rect = pg.Rect(self.x, self.y, 64, 64)
-        self.hitbox = pg.Rect(self.x, self.y, 25, 35)
-        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
+        self.hitbox = pg.Rect(self.x, self.y, 37, 59)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 40, 64, 64)
 
         self.frame_corriendo = 0
         self.frame_milisegundos_corriendo = 100
@@ -84,7 +84,7 @@ class Entidad(pg.sprite.Sprite):
                 (self.ataque_hitbox.x + mundo_x,
                  self.ataque_hitbox.y + offset_y)
             )
-
+        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 2)
         imagen = pg.transform.flip(self.imagen, self.flip, False)
         ventana.blit(
             imagen,
