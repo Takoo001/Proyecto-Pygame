@@ -39,8 +39,6 @@ class Enemigo(Entidad):
             self.direccion = "DERECHA"
             self.flip = False
 
-        self.hitbox.center = self.rect.center
-
         if self.direccion == "DERECHA":
             self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 32, 64, 64)
         else:
@@ -53,6 +51,7 @@ class Enemigo(Entidad):
                 self.atacando = True
 
         self.rect.x += mov_x
+        self.hitbox.center = self.rect.center
 
         if self.atacando:
             self.animar_ataque()
@@ -67,14 +66,17 @@ class EnemigoPequeno(Enemigo):
         super().__init__(x, y)
 
         # Sprites de Enemigo Pequeño
-        self.sprite_quieto = pg.image.load("assets/sprites_enemigos/español_pequeño_quieto.png").convert_alpha()
-        self.sprite_corriendo = pg.image.load("assets/sprites_enemigos/español_pequeño_corriendo.png").convert_alpha()
-        self.sprite_ataque = pg.image.load("assets/sprites_enemigos/ataque_español_pequeño.png").convert_alpha()
+        self.sprite_quieto = pg.image.load("assets/sprites/sprites_enemigos/español_pequeño_quieto.png").convert_alpha()
+        self.sprite_corriendo = pg.image.load("assets/sprites/sprites_enemigos/español_pequeño_corriendo.png").convert_alpha()
+        self.sprite_ataque = pg.image.load("assets/sprites/sprites_enemigos/ataque_español_pequeño.png").convert_alpha()
 
         # Sprites
         self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 8, 64, 64)
         self.frames_ataque = self.recortar_frames(self.sprite_ataque, 12, 64, 64)
 
         # Modificando cooldown de ataque y rapidez de frames
-        self.cooldown = 2000
+        self.cooldown = 4000
         self.frame_milisegundos_ataque = 50
+
+        self.hitbox = pg.Rect(self.x, self.y, 25, 35)
+        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery, 64, 64)
