@@ -6,7 +6,7 @@ class Suelo(pg.sprite.Sprite):
         super().__init__()
 
         self.largo_suelos = largo_suelos
-        self.sprite_suelo = pg.image.load("assets/sprites/sprites_suelo/suelo_cesped_oscuro.png")
+        self.sprite_suelo = pg.image.load("assets/sprites_suelo/suelo_cesped_oscuro.png")
         self.lista_suelos = []
 
         for x in range(0, ns.ANCHO_NIVEL * largo_suelos, 64):
@@ -14,5 +14,8 @@ class Suelo(pg.sprite.Sprite):
 
     def dibujar_suelo(self, ventana, mundo_x, offset_y):
         for suelo in self.lista_suelos:
-            pg.draw.rect(ventana, (255, 0, 0), suelo, 2)
-            ventana.blit(self.sprite_suelo, (suelo.x + mundo_x, suelo.y + offset_y))
+            ventana.blit(
+                self.sprite_suelo,
+                (suelo.x + mundo_x,
+                 suelo.y + offset_y)
+            )

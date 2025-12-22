@@ -24,20 +24,22 @@ class Entidad(pg.sprite.Sprite):
         self.ultimo_ataque = 0
 
         self.flip = False
-        self.sprite_quieto = pg.image.load("assets/sprites/sprites_lautaro/lautaro_quieto.png").convert_alpha()
-        self.sprite_corriendo = pg.image.load("assets/sprites/sprites_lautaro/lautaro_corriendo.png").convert_alpha()
+        self.sprite_quieto = pg.image.load("assets/images/personajes/lautaro_quieto.png").convert_alpha()
+        self.sprite_corriendo = pg.image.load("assets/images/personajes/lautaro_corriendo.png").convert_alpha()
         self.imagen = self.sprite_quieto
-        self.sprite_ataque = pg.image.load("assets/sprites/sprites_lautaro/ataque_prueba.png").convert_alpha()
-        self.imagen_ataque = pg.image.load("assets/sprites/sprites_lautaro/ataque_prueba.png").convert_alpha()
+        self.sprite_ataque = pg.image.load("assets/images/personajes/ataque_prueba.png").convert_alpha()
+        self.imagen_ataque = pg.image.load("assets/images/personajes/ataque_prueba.png").convert_alpha()
 
         self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 8, 64, 64)
         self.frames_ataque = self.recortar_frames(self.sprite_ataque, 7, 64, 64)
 
-        self.x = x
-        self.y = y
-        self.rect = pg.Rect(self.x, self.y, 64, 64)
-        self.hitbox = pg.Rect(self.x, self.y, 37, 59)
-        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 40, 64, 64)
+        self.rect = pg.Rect(x, y, 64, 64)
+
+        # hitbox fisica
+        self.hitbox = pg.Rect(0, 0, 25, 35)
+        self.hitbox.midbottom = self.rect.midbottom
+
+        self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
 
         self.frame_corriendo = 0
         self.frame_milisegundos_corriendo = 100
@@ -79,10 +81,12 @@ class Entidad(pg.sprite.Sprite):
     def dibujar(self, ventana, mundo_x, offset_y=0):
         if self.atacando:
             ataque = pg.transform.flip(self.imagen_ataque, self.flip, False)
-            ventana.blit(ataque, (self.ataque_hitbox.x + mundo_x,self.ataque_hitbox.y + offset_y))
-            pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 2)
-            
-        pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 2)
+            ventana.blit(
+                ataque,
+                (self.ataque_hitbox.x + mundo_x,
+                 self.ataque_hitbox.y + offset_y)
+            )
+
         imagen = pg.transform.flip(self.imagen, self.flip, False)
         ventana.blit(
             imagen,
@@ -96,7 +100,11 @@ class Entidad(pg.sprite.Sprite):
         self.ataque_hitbox = pg.Rect(0, 0, 0, 0)
 
     def restablecer_posicion(self, y):
-        self.rect.y = y
-        self.hitbox.center = self.rect.center
+        # el piso corrige la hitbox
+        self.hitbox.bottom = y
+
+        # el sprite visual sigue a la hitbox
+        self.rect.midbottom = self.hitbox.midbottom
+
         self.velocidad_y = 0
         self.en_el_aire = False

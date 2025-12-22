@@ -1,6 +1,7 @@
 import pygame as pg
 import nivel_settings as ns
 import time
+from menu import opciones_pausa  
 
 from jugador import Jugador
 from enemigo import EnemigoPequeno
@@ -25,7 +26,7 @@ class Nivel1:
 
     def iniciar(self):
 
-        jugador = Jugador(0, ns.ALTO_NIVEL - 64 - 61)
+        jugador = Jugador(0, ns.ALTO_NIVEL - 64 - 49)
         enemigos_pequenos = []
 
         largo_mapa = 20
@@ -36,15 +37,15 @@ class Nivel1:
         fondo = pg.Surface((fondo_ancho, fondo_alto))
 
         camara_x = 0
-        offset_y = self.pantalla.get_height() - ns.ALTO_NIVEL
+        offset_y = self.pantalla.get_height() - ns.ALTO_NIVEL 
 
         for i in range(400, fondo_ancho, 800):
             enemigos_pequenos.append(
-                EnemigoPequeno(i, ns.ALTO_NIVEL - 64 - 60)
+                EnemigoPequeno(i, ns.ALTO_NIVEL - 64 - 64)
             )
 
         sprite_fondo = pg.image.load(
-            "assets/sprites/sprites_fondo/fondo_bosque.png"
+            "assets/sprites_fondo/fondo_bosque_2.png"
         ).convert()
 
         sprite_fondo = pg.transform.scale(
@@ -62,7 +63,17 @@ class Nivel1:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self.running = False
+                    return
 
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        fondo_congelado = self.pantalla.copy() 
+                        accion = opciones_pausa(fondo_congelado, self.reloj)
+                        
+                        if accion == "salir":
+                            self.running = False
+                            return
+                        
             if self.game_over:
                 self.animar_game_over()
                 continue
@@ -76,7 +87,6 @@ class Nivel1:
             jugador.rect.x = max(
                 0, min(jugador.rect.x, fondo_ancho - 64 - 1280)
             )
-
 
             self.pantalla.fill(ns.BACKGROUND)
             self.pantalla.blit(fondo, (camara_x, 0))
@@ -110,7 +120,7 @@ class Nivel1:
             for tile in suelo.lista_suelos:
                 if jugador.hitbox.colliderect(tile):
                     jugador.restablecer_posicion(
-                        ns.ALTO_NIVEL - 64 - 61
+                        ns.ALTO_NIVEL - 64 - 0
                     )
 
             if jugador.vida <= 0:
@@ -127,7 +137,6 @@ class Nivel1:
 
         self.pantalla.fill((0, 0, 0))
 
-        # crecer suavemente
         if self.escala_game_over < 1.0:
             self.escala_game_over += 0.02
 

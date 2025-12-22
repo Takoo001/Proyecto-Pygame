@@ -1,4 +1,5 @@
 import pygame
+import pygame as pg
 import os
 
 pygame.init()
@@ -72,6 +73,24 @@ RUTA_MUSICA_MENU = os.path.join(RUTA_MUSICA, "musica_menu.ogg")
 pygame.font.init()
 FUENTE_GENERAL = pygame.font.Font(None, 60)
 FUENTE_TITULO = pygame.font.Font(None, 120)
+
+pygame.mixer.init()
+
+
+# Para los sonidos de ataque y control de ellos
+VOLUMEN_SFX = 100
+
+SONIDO_ATAQUE = pygame.mixer.Sound("assets/sonidos/ataque.wav")
+SONIDO_DANO = pygame.mixer.Sound("assets/sonidos/dano_jugador.ogg")
+SONIDO_ESPADA_ENEMIGO = pygame.mixer.Sound("assets/sonidos/espada_enemigo.wav")
+
+def aplicar_volumen_sfx():
+    v = VOLUMEN_SFX / 100
+    SONIDO_ATAQUE.set_volume(v)
+    SONIDO_DANO.set_volume(v)
+    SONIDO_ESPADA_ENEMIGO.set_volume(v)
+
+aplicar_volumen_sfx()
 
 
 # Reloj
