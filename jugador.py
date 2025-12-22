@@ -133,9 +133,9 @@ class Jugador(Entidad):
             self.animar_dash()
 
         if self.direccion == "DERECHA":
-            self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 48, 64, 64)
+            self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery - 40, 64, 64)
         if self.direccion == "IZQUIERDA":
-            self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 48, 64, 64)
+            self.ataque_hitbox = pg.Rect(self.rect.centerx - 79, self.rect.centery - 40, 64, 64)
 
         if self.atacando:
             self.animar_ataque()
