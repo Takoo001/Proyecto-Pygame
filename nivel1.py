@@ -40,7 +40,7 @@ class Nivel1:
 
         for i in range(400, fondo_ancho, 800):
             enemigos_pequenos.append(
-                EnemigoPequeno(i, ns.ALTO_NIVEL - 64 - 64)
+                EnemigoPequeno(i, ns.ALTO_NIVEL - 64 - 60)
             )
 
         sprite_fondo = pg.image.load(

@@ -71,12 +71,12 @@ class EnemigoPequeno(Enemigo):
         self.sprite_ataque = pg.image.load("assets/sprites/sprites_enemigos/ataque_español_pequeño.png").convert_alpha()
 
         # Sprites
-        self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 8, 64, 64)
+        self.frames_corriendo = self.recortar_frames(self.sprite_corriendo, 9, 64, 64)
         self.frames_ataque = self.recortar_frames(self.sprite_ataque, 12, 64, 64)
 
         # Modificando cooldown de ataque y rapidez de frames
         self.cooldown = 4000
         self.frame_milisegundos_ataque = 50
 
-        self.hitbox = pg.Rect(self.x, self.y, 25, 35)
+        self.hitbox = pg.Rect(self.x, self.y, 28, 58)
         self.ataque_hitbox = pg.Rect(self.rect.centerx + 15, self.rect.centery, 64, 64)

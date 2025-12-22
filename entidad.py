@@ -79,11 +79,9 @@ class Entidad(pg.sprite.Sprite):
     def dibujar(self, ventana, mundo_x, offset_y=0):
         if self.atacando:
             ataque = pg.transform.flip(self.imagen_ataque, self.flip, False)
-            ventana.blit(
-                ataque,
-                (self.ataque_hitbox.x + mundo_x,
-                 self.ataque_hitbox.y + offset_y)
-            )
+            ventana.blit(ataque, (self.ataque_hitbox.x + mundo_x,self.ataque_hitbox.y + offset_y))
+            pg.draw.rect(ventana, (255, 0, 0), self.ataque_hitbox, 2)
+            
         pg.draw.rect(ventana, (255, 0, 0), self.hitbox, 2)
         imagen = pg.transform.flip(self.imagen, self.flip, False)
         ventana.blit(
